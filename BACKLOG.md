@@ -1,10 +1,39 @@
 # Backlog
 
-Tickets that are not built yet. Newest first. The Chronos board (project `promilaasj-website`) carries a short card per ticket; the details live here.
+Requested changes, newest first. The status is at the top of each ticket. The Chronos board (project `promilaasj-website`) carries a short card per ticket; the details live here.
+
+## backlog-20260920-hero-stage-photo — Front page: bring back the stage photo in the background
+
+**Status:** backlog (not started) · **Requested:** 2026-09-20
+
+**What:** The front page should have the photo of the large stage in the background again, behind the "Opgelet! Zin in Dich" text and the single card. The design mockups (1C) had it; the live site does not.
+
+**Why it is missing:** The build uses a generated dark placeholder (`assets/img/hero.webp`) instead of the stage photo. That was a choice made during the build, because the old site had been called out for old pictures, and it was not checked with the requester.
+
+**Source and quality:**
+- The stage photo is in the repo at `design/refs/boeken-banner.jpg` (2000 × 628 px, from the old site's upload `Promilaasj-boeken-banner.jpg`).
+- It is very wide and only 628 px high. The hero is taller than that, so on a laptop it is stretched to about 1.4× and looks soft, and about 3× on high-resolution phone screens. A larger original (from the photographer or the presskit) would look much better. The presskit banners might be exactly that once the download works.
+- The photo shows the earlier lineup on stage. Fine as a background, but worth a look.
+
+**Acceptance criteria:**
+- The stage photo is visible behind the hero text on laptop and phone, with the same darkening as in the 1C mockup so the text stays easy to read (contrast checked).
+- The important part of the photo (the band on stage) stays in view on a phone, where the hero is tall and narrow.
+- The image is optimized (WebP, roughly under 200 KB) and does not slow the first view.
+- `npm test` still passes (it checks that all images load).
+
+**Open questions for the requester:**
+1. Use the old-site stage photo as is, or is a newer or higher-resolution version available?
+2. Which side should show on a phone: the band (left) or the crowd (right)?
+
+**Implementation notes:**
+- Convert the photo to `assets/img/hero.webp` (or a new file, then point `.lp-bg` at it in `assets/css/style.css`). The 1C mockup used `background-position: 80% center` with a dark gradient overlay; the overlay already exists in `.lp::after`.
+- If the photo stays low-resolution, limit its softness by keeping the hero shorter than the full screen height, or by placing the photo at the top with a fade into the dark background.
 
 ## backlog-20260920-embedded-music-player — Music: play the song on the site, not on Spotify
 
-**Status:** backlog (not started) · **Requested:** 2026-09-20
+**Status:** done · **Requested:** 2026-09-20 · **Closed:** 2026-09-20
+
+**Outcome:** Resolved by the requester: Limburgs maedje now has its Spotify album id in `index.html` and plays in the page like the other releases. `npm test` now checks that every release turns into a player. The open question about full-length playback for visitors who are not logged in to Spotify (30-second previews) was not answered and is left as it is.
 
 **What:** Clicking on the music should play the song in an **embedded player on the site**, not send the visitor to Spotify.
 
@@ -32,7 +61,9 @@ Tickets that are not built yet. Newest first. The Chronos board (project `promil
 
 ## backlog-20260920-links-new-tab — Laptop: open links in a new tab
 
-**Status:** backlog (not started) · **Requested:** 2026-09-20
+**Status:** done · **Requested:** 2026-09-20 · **Closed:** 2026-09-20
+
+**Outcome:** Built. On laptop-size screens (from 980 px wide, with a mouse) every external link opens in a new tab: the nav and footer icons, the Spotify and YouTube buttons, "Open in Spotify", Nr. 1 Artiesten and the tour "Meer info" links. Screen readers are told that the link opens in a new tab. Tablets and phones keep the same tab, and so do the menu, `mailto:`, `tel:` and the video playlist. Resizing a window switches the behavior live. The width is set in `main.js` (search for `laptop`); phones can be added by removing `(hover: hover)` and the width. Covered by `npm test`.
 
 **What:** On the laptop version of the site, clicking a link should open it in a **new tab**, not replace the site in the current tab.
 

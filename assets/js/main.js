@@ -150,6 +150,37 @@
     empty.hidden = true;
   }
 
+  // ---------- Links: op een laptop openen externe links in een nieuw tabblad ----------
+  // Laptop = scherm vanaf 980 px breed met een muis. Op telefoon en tablet blijft alles in hetzelfde tabblad.
+  // Links binnen de pagina (#...), mailto: en tel: blijven zoals ze zijn; de video's in de afspeellijst spelen in de pagina.
+  var NEW_TAB_NOTE = " (opent in een nieuw tabblad)";
+  var laptop = window.matchMedia("(min-width: 980px) and (hover: hover)");
+  function setNewTab(on) {
+    document.querySelectorAll('a[href^="https://"]:not([data-yt])').forEach(function (a) {
+      var note = a.querySelector(".sr-note");
+      if (on) {
+        a.target = "_blank";
+        if (!/\bnoopener\b/.test(a.rel)) a.rel = (a.rel + " noopener").trim();
+        if (a.hasAttribute("aria-label")) {
+          // alleen een icoon: de naam van de link krijgt de toelichting
+          if (!a.hasAttribute("data-label")) a.setAttribute("data-label", a.getAttribute("aria-label"));
+          a.setAttribute("aria-label", a.getAttribute("data-label") + NEW_TAB_NOTE);
+        } else if (!note) {
+          a.append(el("span", "sr-only sr-note", NEW_TAB_NOTE));
+        }
+      } else {
+        a.removeAttribute("target");
+        if (a.hasAttribute("data-label")) {
+          a.setAttribute("aria-label", a.getAttribute("data-label"));
+          a.removeAttribute("data-label");
+        }
+        if (note) note.remove();
+      }
+    });
+  }
+  setNewTab(laptop.matches);
+  laptop.addEventListener("change", function (e) { setNewTab(e.matches); });
+
   // ---------- Jaartal in de footer ----------
   var year = document.getElementById("year");
   if (year) year.textContent = String(now.getFullYear());

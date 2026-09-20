@@ -26,6 +26,7 @@ Upload the whole folder to any static host with `index.html` at the root. The sh
 | Band photo (booking section) | Overwrite `assets/img/band.webp`. |
 | Add or change a release | Copy an `<article class="rel">` block in `index.html`. Give it a `data-spotify="<album id>"` to get a player (the id is the part after `/album/` in the Spotify link). |
 | Add or change a video | Copy a `<li>` in the playlist in `index.html` (YouTube id and title) and add a thumbnail as `assets/img/video-<id>.jpg`. |
+| Which links open in a new tab | `assets/js/main.js`, search for `laptop`. Now: external links, on screens from 980 px wide with a mouse. |
 | Booking and contact details | The `#boeken` section of `index.html`. |
 
 ## Tests

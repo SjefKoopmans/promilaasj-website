@@ -95,6 +95,7 @@ for (const w of [1440, 900, 390, 320]) {
   check(JSON.stringify(titles) === JSON.stringify(["Vastelaovend", "Javascript-link", "11e van de 11e <b>x</b>"]), "agenda: gesorteerd, verleden en onmogelijke datums weg", JSON.stringify(titles));
   const links = await page.$$eval("#gigs a", (n) => n.map((e) => e.href));
   check(JSON.stringify(links) === JSON.stringify(["https://example.com/kaarten"]), "agenda: alleen echte https-links (plaatshouder '…' en javascript: genegeerd)", JSON.stringify(links));
+  check((await page.getAttribute("#gigs a", "target")) === "_blank", "agenda: 'Meer info' opent op een laptop in een nieuw tabblad");
   check((await page.$$("#gigs .gig b")).length === 0, "agenda: tekst wordt niet als HTML geïnterpreteerd");
   check(await page.isHidden("#gigs-empty"), "agenda: lege melding verborgen zodra er optredens zijn");
   await ctx.close();
@@ -135,9 +136,16 @@ for (const w of [1440, 900, 390, 320]) {
 }
 {
   const { ctx, page } = await open({ width: 1440, height: 900 });
-  await page.click('[data-spotify="4XukwB5Mk3E0A23apIAF4D"] .cd');
-  const sp = await page.getAttribute('[data-spotify="4XukwB5Mk3E0A23apIAF4D"] iframe', "src");
-  check(sp === "https://open.spotify.com/embed/album/4XukwB5Mk3E0A23apIAF4D", "Spotify-speler laadt pas na een klik", String(sp));
+  const releases = await page.$$eval("[data-spotify]", (n) => n.map((e) => ({ id: e.getAttribute("data-spotify"), title: e.getAttribute("data-title") })));
+  check((await page.locator("iframe").count()) === 0, "Spotify: nog niets geladen voor de klik");
+  for (const r of releases) {
+    await page.click(`[data-spotify="${r.id}"] .cd`);
+    const sp = await page.getAttribute(`[data-spotify="${r.id}"] iframe`, "src");
+    check(sp === `https://open.spotify.com/embed/album/${r.id}`, `Spotify: '${r.title}' speelt in de pagina na een klik`, String(sp));
+  }
+  const cards = await page.locator("#muziek .rel").count();
+  check(cards === releases.length && cards > 0, `Spotify: elke uitgave (${cards}) heeft een speler`, `${releases.length} van ${cards}`);
+  check(page.url() === BASE, "Spotify: bezoeker blijft op de site");
 
   check((await page.locator("#feat iframe").count()) === 0, "YouTube: nog niets geladen voor de klik");
   await page.click("#feat-btn");
@@ -145,6 +153,55 @@ for (const w of [1440, 900, 390, 320]) {
   await page.click('#playlist [data-yt="O1SFRd0IQ8I"]');
   check((await page.getAttribute("#feat iframe", "src")).includes("O1SFRd0IQ8I"), "YouTube: afspeellijst wisselt van video");
   check((await page.getAttribute('#playlist [data-yt="O1SFRd0IQ8I"]', "class")).includes("is-active") && (await page.textContent("#feat-title")) === "Promo Promilaasj Tour 2020", "YouTube: actieve video is gemarkeerd");
+  await ctx.close();
+}
+
+// 7. Links: op een laptop in een nieuw tabblad, op telefoon en tablet in hetzelfde tabblad
+const EXTERNAL = 'a[href^="https://"]:not([data-yt])';
+async function linkState(page) {
+  return page.evaluate((sel) => {
+    const ext = [...document.querySelectorAll(sel)];
+    const other = [...document.querySelectorAll('a[href^="#"], a[href^="mailto:"], a[href^="tel:"], a[data-yt]')];
+    return {
+      total: ext.length,
+      withTarget: ext.filter((a) => a.target === "_blank").length,
+      withoutNoopener: ext.filter((a) => a.target === "_blank" && !a.rel.split(" ").includes("noopener")).length,
+      otherWithTarget: other.filter((a) => a.hasAttribute("target")).length,
+      unannounced: ext.filter((a) => a.target === "_blank" && !/opent in een nieuw tabblad/.test(a.getAttribute("aria-label") || a.textContent)).length,
+    };
+  }, EXTERNAL);
+}
+{
+  const { ctx, page } = await open({ width: 1440, height: 900 });
+  await ctx.route(/^https:\/\/(?!127\.)/, (r) => r.fulfill({ status: 200, contentType: "text/html", body: "<title>extern</title>" }));
+  const st = await linkState(page);
+  check(st.total >= 12 && st.withTarget === st.total, `laptop: alle ${st.total} externe links openen in een nieuw tabblad`, `${st.withTarget} van ${st.total}`);
+  check(st.withoutNoopener === 0, "laptop: nieuwe tabbladen kunnen de site niet aansturen (rel=noopener)", JSON.stringify(st));
+  check(st.otherWithTarget === 0, "laptop: menu (#...), mailto:, tel: en de video-afspeellijst blijven zoals ze zijn");
+  check(st.unannounced === 0, "laptop: schermlezers horen dat een link in een nieuw tabblad opent");
+
+  const [popup] = await Promise.all([ctx.waitForEvent("page"), page.click('.nav-social a[href*="facebook.com"]')]);
+  await popup.waitForLoadState();
+  check(popup.url().includes("facebook.com") && page.url() === BASE, "laptop: klik opent Facebook in een nieuw tabblad, de site blijft open");
+  await popup.close();
+
+  const before = ctx.pages().length;
+  await page.click('.nav-links a[href="#video"]');
+  check(ctx.pages().length === before && page.url() === BASE + "#video", "laptop: menu naar een sectie blijft in hetzelfde tabblad");
+
+  await page.setViewportSize({ width: 700, height: 900 });
+  await page.waitForTimeout(200);
+  check((await linkState(page)).withTarget === 0, "verkleinen naar tablet-breedte: links weer in hetzelfde tabblad");
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.waitForTimeout(200);
+  const back = await linkState(page);
+  check(back.withTarget === back.total && back.unannounced === 0, "weer op laptop-breedte: links weer in een nieuw tabblad");
+  await ctx.close();
+}
+for (const w of [900, 390]) {
+  const { ctx, page } = await open({ width: w, height: 800 });
+  const st = await linkState(page);
+  check(st.withTarget === 0, `${w}px (tablet/telefoon): links blijven in hetzelfde tabblad`, `${st.withTarget} met target`);
   await ctx.close();
 }
 

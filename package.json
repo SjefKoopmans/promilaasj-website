@@ -1,0 +1,14 @@
+{
+  "name": "promilaasj-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Eenpagina-website van Promilaasj. Geen build: de map uploaden is genoeg.",
+  "type": "module",
+  "scripts": {
+    "test": "node tests/smoke.mjs",
+    "serve": "python -m http.server 8000"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.63.0"
+  }
+}

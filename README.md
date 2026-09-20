@@ -1,31 +1,44 @@
 # Promilaasj website
 
-One-page Dutch site for the band Promilaasj. Plain HTML, CSS and a little JavaScript: no framework, no build step, no cookies, no third-party requests until a visitor clicks play.
+One-page Dutch site for the band Promilaasj, built on design 1C. Plain HTML, CSS and a little JavaScript: no framework and no build step. Fonts are hosted with the site, there are no cookies, and Spotify and YouTube only load after a visitor clicks play.
 
-## Preview locally
+Sections, in order: OPGELET (new single Zin in Dich) → Tour → Muziek → Video → Boeken and contact.
+
+## Preview
 
 ```
 python -m http.server 8000
 ```
 
-Then open http://localhost:8000.
+Open http://localhost:8000.
 
-## Deploy
+## Publish
 
-Upload the whole folder to any static host (the current hosting, Netlify, GitHub Pages, ...). `index.html` must be at the root. The Open Graph and JSON-LD URLs in `index.html` assume `https://www.promilaasj.nl/`.
+Upload the whole folder to any static host with `index.html` at the root. The share and search info in `index.html` assumes `https://www.promilaasj.nl/`.
 
 ## Keeping it up to date
 
 | What | Where |
 | --- | --- |
-| Add a gig | `assets/js/gigs.js` (one line per gig, format explained in the file). Past gigs hide themselves. |
-| New band photo | Save as `assets/img/bandfoto.jpg`, then enable the commented `bandfoto.jpg` line in `.hero` in `assets/css/style.css`. |
-| New EP | Copy an `<article class="card music">` block in `index.html`, change the Spotify album id and cover (`assets/img/`, 400x400 WebP). |
-| New video | Copy a `<div class="card video">` block in `index.html`, change the YouTube id and title. |
-| Booking / contact details | The `#boeken` and `#contact` sections of `index.html`. |
+| Add or change a gig | `assets/js/gigs.js`, one line per gig (the format is explained in the file). Gigs whose date has passed disappear by themselves. Leave out `url` if there is no link. |
+| Hero photo | Overwrite `assets/img/hero.webp` (about 1600 px wide, WebP). It is a generated placeholder now. |
+| Cover of "Zin in Dich" | Save it as `assets/img/zin-in-dich.webp` and follow the comment in `index.html` (search for "Cover volgt"). |
+| Band photo (booking section) | Overwrite `assets/img/band.webp`. |
+| Add or change a release | Copy an `<article class="rel">` block in `index.html`. Give it a `data-spotify="<album id>"` to get a player (the id is the part after `/album/` in the Spotify link). |
+| Add or change a video | Copy a `<li>` in the playlist in `index.html` (YouTube id and title) and add a thumbnail as `assets/img/video-<id>.jpg`. |
+| Booking and contact details | The `#boeken` section of `index.html`. |
 
-## Notes
+## Tests
 
-- Fonts (Anton, Barlow) are self-hosted in `assets/fonts/`.
-- A Content-Security-Policy meta tag limits the page to itself plus Spotify and YouTube (no-cookie) embeds, and YouTube thumbnails. If you add another embed, allow it there.
-- The logo (`assets/img/logo.png`) is only 216 px wide, taken from the old site. A larger or vector version would look sharper in the hero and the share image (`og.jpg`).
+```
+npm install
+npm test
+```
+
+Checks the section order, that every image really loads, no sideways scrolling from 320 px up, the agenda logic, the phone menu and the Spotify and YouTube players. It also validates `assets/js/gigs.js`, so a typo in a date is reported instead of silently hiding a gig. It uses the installed Edge or Chrome (`BROWSER_CHANNEL=chrome` to choose).
+
+## Other things in this repo
+
+- `design/` keeps all design options (round 1 and round 2) as mockups, PDFs and previews, for the future. It is not part of the live site.
+- `BACKLOG.md` lists tickets that are not built yet.
+- `assets/img/presskit 2026/` is not used by the site.

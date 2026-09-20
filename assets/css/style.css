@@ -109,9 +109,11 @@ h3 { font: 800 1.4rem/1.15 var(--display); text-transform: uppercase; letter-spa
 
 /* ---------- 1. Aankondiging ---------- */
 .lp { position: relative; min-height: 100svh; display: flex; align-items: center; padding: 130px 0 90px; overflow: hidden; isolation: isolate; color: #f5f5f7; background: #09090b; }
-/* De hoofdfoto: overschrijf assets/img/hero.webp om hem te vervangen. */
-.lp-bg { position: absolute; inset: 0; z-index: -2; background: #09090b url("../img/hero.webp") 80% center / cover no-repeat; }
-.lp::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(9, 9, 11, .8) 0%, rgba(9, 9, 11, .5) 50%, rgba(9, 9, 11, .15) 100%), linear-gradient(0deg, #09090b 0%, transparent 26%); }
+/* De hoofdfoto (het grote podium): overschrijf assets/img/hero.webp om hem te vervangen.
+   De % is welk deel van de brede foto zichtbaar is: lager = meer naar links, hoger = meer naar rechts. */
+.lp-bg { position: absolute; inset: 0; z-index: -2; background: #09090b url("../img/hero.webp") 64% center / cover no-repeat; }
+/* Donkere laag over de foto: een zachte donkere plek achter de tekst (links), verder blijft het podium zichtbaar. */
+.lp::after { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(ellipse 58% 75% at 17% 52%, rgba(9, 9, 11, .62) 0%, rgba(9, 9, 11, 0) 100%), linear-gradient(90deg, rgba(9, 9, 11, .8) 0%, rgba(9, 9, 11, .5) 50%, rgba(9, 9, 11, .15) 100%), linear-gradient(0deg, #09090b 0%, transparent 26%); }
 .lp-wrap { display: grid; gap: 48px; align-items: center; width: 100%; }
 .alertchip { display: inline-flex; align-items: center; gap: 10px; padding: 10px 18px; border-radius: 999px; background: rgba(255, 45, 61, .14); border: 1px solid rgba(255, 45, 61, .55); font: 800 .8rem/1 var(--display); letter-spacing: .2em; text-transform: uppercase; color: #ff6a73; }
 .alertchip i { width: 9px; height: 9px; border-radius: 50%; background: #ff2d3d; box-shadow: 0 0 0 0 rgba(255, 45, 61, .7); animation: pulse 1.8s infinite; }
@@ -246,6 +248,9 @@ a.cd, .cd { position: relative; display: block; width: 100%; max-width: 300px; a
 @media (max-width: 719px) {
   .wrap { padding: 0 20px; }
   .lp { padding: 110px 0 64px; min-height: 0; }
+  .lp-bg { background-position: 56% center; }
+  /* de tekst loopt hier over de hele breedte: de foto overal donkerder maken */
+  .lp::after { background: linear-gradient(180deg, rgba(9, 9, 11, .66) 0%, rgba(9, 9, 11, .5) 60%, rgba(9, 9, 11, .34) 100%), linear-gradient(0deg, #09090b 0%, transparent 26%); }
   .s { padding-top: 84px; }
   .tour-sec { padding: 84px 0 90px; }
   .music-sec { padding-bottom: 90px; }

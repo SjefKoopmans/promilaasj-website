@@ -4,7 +4,9 @@ Requested changes, newest first. The status is at the top of each ticket. The Ch
 
 ## backlog-20260920-hero-stage-photo — Front page: bring back the stage photo in the background
 
-**Status:** backlog (not started) · **Requested:** 2026-09-20
+**Status:** done · **Requested:** 2026-09-20 · **Closed:** 2026-09-20
+
+**Outcome:** Built. `assets/img/hero.webp` is now the stage photo (182 KB, WebP, preloaded), behind "Opgelet! Zin in Dich" on laptop, wide screens, tablet and phone. On laptop the band and the crowd stay visible between the text and the single card. The photo is darker on phones, where the text spans the full width. A soft dark area behind the text keeps it readable: `npm test` measures the contrast of the text over the photo at 1440, 1024 and 390 px (body text 6+ against 4.5 needed; the orange-red "DICH" 3.9 or more against 3). The photo is still the 2000 x 628 px original, so it is a little soft on big screens; a larger original would improve it.
 
 **What:** The front page should have the photo of the large stage in the background again, behind the "Opgelet! Zin in Dich" text and the single card. The design mockups (1C) had it; the live site does not.
 

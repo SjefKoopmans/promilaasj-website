@@ -213,6 +213,58 @@ for (const w of [900, 390]) {
   await ctx.close();
 }
 
+// 8. Voorpagina: de foto van het podium staat erachter en de tekst blijft goed leesbaar
+const lum = ([r, g, b]) => {
+  const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+  return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+};
+const contrast = (l1, l2) => (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+
+// Hoe licht is de foto achter een stuk tekst? Verberg de tekst, kijk naar de pixels erachter (90e percentiel).
+async function backgroundBehind(page, selector) {
+  const box = await page.locator(selector).first().boundingBox();
+  const setHidden = (hide) => page.evaluate((h) => document.querySelectorAll(".lp-copy, .single").forEach((e) => { e.style.visibility = h ? "hidden" : ""; }), hide);
+  await setHidden(true);
+  const png = await page.screenshot({ clip: box });
+  await setHidden(false);
+  return page.evaluate(async (b64) => {
+    const img = new Image();
+    img.src = "data:image/png;base64," + b64;
+    await img.decode();
+    const c = document.createElement("canvas");
+    c.width = img.width; c.height = img.height;
+    const g = c.getContext("2d");
+    g.drawImage(img, 0, 0);
+    const d = g.getImageData(0, 0, c.width, c.height).data;
+    const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+    const ls = [];
+    for (let i = 0; i < d.length; i += 4) ls.push(0.2126 * f(d[i]) + 0.7152 * f(d[i + 1]) + 0.0722 * f(d[i + 2]));
+    ls.sort((a, b) => a - b);
+    return ls[Math.floor(ls.length * 0.9)];
+  }, png.toString("base64"));
+}
+
+{
+  const size = (await stat(join(ROOT, "assets/img/hero.webp"))).size;
+  check(size <= 250 * 1024, `voorpagina: de achtergrondfoto is licht genoeg (${Math.round(size / 1024)} KB, maximaal 250 KB)`);
+}
+for (const [w, h] of [[1440, 900], [1024, 768], [390, 844]]) {
+  const { ctx, page } = await open({ width: w, height: h });
+  await page.waitForFunction(() => getComputedStyle(document.querySelector(".lp-bg")).backgroundImage.includes("hero.webp"));
+  await page.waitForTimeout(400);
+  const cases = [
+    [".lp .lede", lum([226, 226, 230]), 4.5, "gewone tekst"],
+    [".lp h1 .line:not(.grad)", 1, 3, "grote titel"],
+    [".lp h1 .grad", lum([255, 45, 61]), 3, "grote titel in kleur"],
+  ];
+  for (const [selector, textLum, needed, what] of cases) {
+    const bg = await backgroundBehind(page, selector);
+    const ratio = contrast(textLum, bg);
+    check(ratio >= needed, `voorpagina ${w}px: ${what} leesbaar over de foto (contrast ${ratio.toFixed(1)}, minimaal ${needed})`);
+  }
+  await ctx.close();
+}
+
 await browser.close();
 server.close();
 console.log(failures ? `\n${failures} test(s) mislukt` : "\nAlles OK");

@@ -21,7 +21,7 @@ Upload the whole folder to any static host with `index.html` at the root. The sh
 | What | Where |
 | --- | --- |
 | Add or change a gig | `assets/js/gigs.js`, one line per gig (the format is explained in the file). Gigs whose date has passed disappear by themselves. Leave out `url` if there is no link. |
-| Hero photo | Overwrite `assets/img/hero.webp` (about 1600 px wide, WebP). It is a generated placeholder now. |
+| Hero photo | `assets/img/hero.webp`: the stage photo now (from the old site, 2000 x 628 px, so a bit soft on big screens). Overwrite it with a larger original (2560 px wide or more, under about 250 KB) for a sharper look. Which part of a wide photo shows is the percentage in `.lp-bg` in `assets/css/style.css`. `npm test` checks that the text stays readable over the photo. |
 | Cover of "Zin in Dich" | Save it as `assets/img/zin-in-dich.webp` and follow the comment in `index.html` (search for "Cover volgt"). |
 | Band photo (booking section) | Overwrite `assets/img/band.webp`. |
 | Add or change a release | Copy an `<article class="rel">` block in `index.html`. Give it a `data-spotify="<album id>"` to get a player (the id is the part after `/album/` in the Spotify link). |

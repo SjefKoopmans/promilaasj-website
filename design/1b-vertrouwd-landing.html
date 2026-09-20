@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontwerp 1B — Vertrouwd met de landingspagina van ontwerp 2</title>
+<style>
+@font-face{font-family:"Montserrat";src:url("refs/fonts/montserrat-700.woff2") format("woff2");font-weight:700 800}
+@font-face{font-family:"Lato";src:url("refs/fonts/lato-400.woff2") format("woff2");font-weight:400}
+@font-face{font-family:"Lato";src:url("refs/fonts/lato-700.woff2") format("woff2");font-weight:700}
+:root{--grey:#ececec;--light:#f7f7f7;--ink:#444;--red:#d0141f;--black:#000}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--light);color:var(--ink);font:400 16px/1.7 "Lato",system-ui,sans-serif}
+a{color:inherit}
+img{display:block;max-width:100%}
+h2{font:800 40px/1.1 "Montserrat",sans-serif;text-transform:uppercase;text-align:center;margin:0;color:var(--ink)}
+.icon{width:20px;height:20px;display:block}
+
+/* header, exactly like the old site: light grey bar, black wordmark, spaced caps nav, four social icons */
+header{background:var(--grey);height:100px;display:flex;align-items:center;justify-content:space-between;padding:0 118px;position:sticky;top:0;z-index:10}
+header .logo img{width:220px}
+nav{display:flex;align-items:center;gap:36px}
+nav a{font:700 12.5px/1 "Montserrat",sans-serif;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:#000}
+nav .social{display:flex;gap:30px;margin-left:16px;color:#555}
+.burger{display:none;width:26px;height:18px;border-top:3px solid #000;border-bottom:3px solid #000;position:relative}
+.burger::after{content:"";position:absolute;left:0;right:0;top:5px;border-top:3px solid #000}
+
+/* 1. OPGELET: the panorama in its black frame, with the announcement on top */
+.hero{background:var(--black);padding:35px 35px 0;position:relative}
+.hero .photo{position:relative}
+.hero .photo img{width:100%;aspect-ratio:2000/628;object-fit:cover}
+.alert{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:36px;background:#0d0d0d;border-top:6px solid var(--red);margin:-70px auto 0;position:relative;max-width:1180px;padding:30px 44px;color:#fff}
+.alert .tag{font:800 58px/1 "Montserrat",sans-serif;color:var(--red);letter-spacing:.02em}
+.alert .txt{font:400 19px/1.45 "Lato",sans-serif}
+.alert .txt b{display:block;font:800 28px/1.2 "Montserrat",sans-serif;text-transform:uppercase;margin-top:4px}
+.alert .txt em{font-style:normal;color:#ffd23f}
+.soon{border:2px solid #fff;padding:12px 20px;font:800 13px/1 "Montserrat",sans-serif;letter-spacing:.2em;text-transform:uppercase;white-space:nowrap}
+.hero .gap{height:70px}
+
+/* 2. TOUR */
+#tour{background:var(--grey);padding:90px 20px 100px}
+.tour{max-width:940px;margin:56px auto 0;display:grid;gap:14px}
+.gig{display:grid;grid-template-columns:110px 1fr auto;gap:28px;align-items:center;background:#fff;padding:22px 30px;border-left:6px solid var(--red)}
+.gig .date{text-align:center;font:800 40px/1 "Montserrat",sans-serif;color:#222}
+.gig .date small{display:block;font:700 13px/1.6 "Montserrat",sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+.gig h3{margin:0;font:800 23px/1.2 "Montserrat",sans-serif;text-transform:uppercase;color:#222}
+.gig p{margin:2px 0 0;color:#777}
+.btn{display:inline-block;font:700 12.5px/1 "Montserrat",sans-serif;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;padding:15px 24px;border:2px solid #222;color:#222}
+.btn.red{background:var(--red);border-color:var(--red);color:#fff}
+
+/* 3. MUZIEK: CD sleeves with the disc peeking out, as on the old site */
+#muziek{background:var(--light);padding:90px 20px 100px}
+.cds{max-width:1100px;margin:64px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:30px;justify-items:center}
+.cd{position:relative;width:310px;height:250px}
+.sleeve{position:absolute;left:0;top:0;width:240px;height:240px;z-index:2;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+.disc{position:absolute;left:62px;top:4px;width:232px;height:232px;border-radius:50%;background-size:cover;background-position:center;box-shadow:0 5px 14px rgba(0,0,0,.4)}
+.disc::after{content:"";position:absolute;inset:0;margin:auto;width:52px;height:52px;border-radius:50%;background:var(--light);box-shadow:0 0 0 12px rgba(255,255,255,.55)}
+.cdcap{text-align:center;margin-top:20px}
+.cdcap b{display:block;font:800 20px/1.2 "Montserrat",sans-serif;text-transform:uppercase;color:#222;margin-bottom:12px}
+
+/* 4. VIDEO */
+#video{background:#000;color:#fff;padding:90px 35px 100px}
+#video h2{color:#fff}
+.vids{max-width:1240px;margin:56px auto 0;display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.vid .th{position:relative;aspect-ratio:16/9;overflow:hidden;background:#222}
+.vid .th img{width:100%;height:100%;object-fit:cover}
+.play{position:absolute;inset:0;margin:auto;width:60px;height:60px;border-radius:50%;background:rgba(0,0,0,.6);border:3px solid #fff}
+.play::after{content:"";position:absolute;left:23px;top:16px;border:11px solid transparent;border-left:18px solid #fff}
+.vid b{display:block;margin-top:12px;font:700 15px/1.3 "Lato",sans-serif}
+
+/* 5. BOEKEN & CONTACT: two columns with the partner logos, as on the old site */
+#boeken{background:var(--light);padding:100px 20px}
+.cols{max-width:1070px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:80px}
+.cols h2{text-align:left;font-size:44px}
+.cols h4{font:800 30px/1.2 "Montserrat",sans-serif;text-transform:uppercase;margin:34px 0 16px;color:var(--ink)}
+.cols p{margin:16px 0}
+.cols img.l1{width:140px;margin:22px 0}
+.cols img.l2{width:90px;margin:8px 0 12px}
+.rule{width:100px;border-top:3px solid #d8d8d8;margin:28px 0}
+
+/* Instagram strip (kept from the old site) */
+.ig{background:#000;color:#fff;padding:30px 10px 34px}
+.ig .who{display:flex;align-items:center;gap:14px;font:700 15px/1 "Lato",sans-serif;padding:0 0 18px 6px}
+.ig .who span{display:grid;place-items:center;width:50px;height:50px;border-radius:50%;background:#222}
+.igrid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.igrid img{width:100%;aspect-ratio:1;object-fit:cover}
+.igb{display:flex;justify-content:center;gap:10px;margin-top:18px}
+.igb a{background:#e33;color:#fff;text-decoration:none;font:400 13px/1 "Lato",sans-serif;padding:11px 16px;border-radius:3px}
+footer{background:#000;color:#aaa;text-align:center;padding:34px 20px 30px;font-size:13px;border-top:1px solid #222}
+footer .social{display:flex;justify-content:center;gap:34px;margin-bottom:14px;color:#888}
+footer .icon{width:17px;height:17px}
+
+
+/* ===== Landing page taken from design 2 (Modern), set in Montserrat ===== */
+.pill{display:inline-flex;align-items:center;gap:8px;padding:16px 28px;border-radius:999px;font:700 14px/1 "Montserrat",sans-serif;letter-spacing:.04em;text-decoration:none;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.08);color:#fff;transition:transform .15s}
+.pill:hover{transform:translateY(-2px)}
+.pill.solid{background:linear-gradient(120deg,#d0141f 0%,#ff5a1f 60%,#ff9f0a 100%);border:0}
+.lp{position:relative;min-height:780px;display:flex;align-items:center;padding:70px 0 100px;overflow:hidden;isolation:isolate;color:#f5f5f7;background:#09090b}
+.lp-bg{position:absolute;inset:0;z-index:-2;background:url(refs/boeken-banner.jpg) 80% center/cover;filter:saturate(1.15)}
+.lp::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(9,9,11,.94) 0%,rgba(9,9,11,.72) 45%,rgba(9,9,11,.3) 100%),linear-gradient(0deg,#09090b 0%,transparent 30%)}
+.lp-wrap{max-width:1200px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:1.25fr .75fr;gap:56px;align-items:center;width:100%}
+.alertchip{display:inline-flex;align-items:center;gap:10px;padding:10px 18px;border-radius:999px;background:rgba(255,45,61,.14);border:1px solid rgba(255,45,61,.5);font:800 13px/1 "Montserrat",sans-serif;letter-spacing:.2em;color:#ff5560}
+.alertchip i{width:9px;height:9px;border-radius:50%;background:#ff2d3d;box-shadow:0 0 0 0 rgba(255,45,61,.7);animation:pulse 1.8s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 12px rgba(255,45,61,0)}100%{box-shadow:0 0 0 0 rgba(255,45,61,0)}}
+.lp h1{font:800 clamp(54px,8.6vw,124px)/.92 "Montserrat",sans-serif;letter-spacing:-.045em;margin:26px 0 0;text-transform:uppercase;color:#fff}
+.grad{background:linear-gradient(120deg,#ff2d3d 0%,#ff6a1a 55%,#ff9f0a 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lp p{font:400 21px/1.5 "Lato",sans-serif;color:#d4d4d8;max-width:30rem;margin:26px 0 0}
+.lp p b{color:#fff}
+.lp .act{display:flex;gap:12px;margin-top:34px;flex-wrap:wrap}
+.glass{background:rgba(24,24,28,.6);-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,.12);border-radius:28px;padding:18px}
+.single{transform:rotate(2.5deg)}
+.cover{aspect-ratio:1;border-radius:18px;background:radial-gradient(120% 90% at 20% 10%,#ff9f0a,transparent 55%),radial-gradient(90% 80% at 90% 100%,#ff2d3d,transparent 60%),#1a0a0a;display:grid;place-items:center;text-align:center;font:800 36px/.98 "Montserrat",sans-serif;letter-spacing:-.03em;text-transform:uppercase;padding:20px;position:relative}
+.cover small{position:absolute;left:14px;bottom:12px;font:700 11px/1 "Montserrat",sans-serif;letter-spacing:.14em;opacity:.8}
+.single .meta{display:flex;justify-content:space-between;align-items:center;padding:16px 6px 4px;gap:10px}
+.single .meta b{font:800 16px/1.2 "Montserrat",sans-serif}.single .meta span{color:#a1a1aa;font-size:14px}
+.badge{padding:8px 14px;border-radius:999px;background:#fff;color:#111;font:800 11px/1 "Montserrat",sans-serif;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+@media (max-width:980px){.lp-wrap{grid-template-columns:1fr}.single{max-width:340px}.lp{padding:60px 0 70px;min-height:0}}
+@media (max-width:640px){.lp-wrap{padding:0 20px}}
+@media (max-width:1100px){header{padding:0 40px}nav{gap:22px}.cols{gap:40px}.vids{grid-template-columns:repeat(2,1fr)}.igrid{grid-template-columns:repeat(4,1fr)}.cds{grid-template-columns:1fr;gap:56px}}
+@media (max-width:800px){
+ header{height:76px;padding:0 20px}header .logo img{width:170px}nav a,nav .social{display:none}.burger{display:block}
+ .hero{padding:14px 14px 0}.alert{grid-template-columns:1fr;gap:14px;margin-top:-30px;padding:24px 22px}.alert .tag{font-size:42px}.alert .txt b{font-size:22px}.hero .gap{height:34px}
+ h2{font-size:32px}.gig{grid-template-columns:78px 1fr;padding:18px}.gig .btn{grid-column:1/-1;text-align:center}.gig .date{font-size:32px}
+ .cols{grid-template-columns:1fr}.vids{grid-template-columns:1fr}.igrid{grid-template-columns:repeat(2,1fr)}#tour,#muziek,#video,#boeken{padding-top:64px;padding-bottom:70px}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+ <symbol id="i-fb" viewBox="0 0 24 24"><path fill="currentColor" d="M13.5 22v-8.2h2.8l.5-3.3h-3.3V8.4c0-1 .4-1.7 1.8-1.7H17V3.8C16.6 3.7 15.6 3.6 14.5 3.6c-2.6 0-4.3 1.5-4.3 4.4v2.5H7.4v3.3h2.8V22z"/></symbol>
+ <symbol id="i-ig" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.3" cy="6.7" r="1.2" fill="currentColor"/></symbol>
+ <symbol id="i-sp" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M6.5 9.5c3.5-1 7.5-.7 10.5 1M7 12.8c3-.8 6.2-.5 8.8 1M7.5 16c2.5-.6 5-.4 7 .8" fill="none" stroke="#ececec" stroke-width="1.7" stroke-linecap="round"/></symbol>
+ <symbol id="i-yt" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4" fill="currentColor"/><path d="M10 9l5 3-5 3z" fill="#ececec"/></symbol>
+</svg>
+
+<header>
+  <a class="logo" href="#"><img src="refs/header1schwarz.png" alt="Promilaasj"></a>
+  <nav>
+    <a href="#">Home</a><a href="#tour">Tour</a><a href="#muziek">Muziek</a><a href="#video">Video</a><a href="#boeken">Boeken</a>
+    <span class="social">
+      <svg class="icon"><use href="#i-fb"/></svg><svg class="icon"><use href="#i-ig"/></svg><svg class="icon"><use href="#i-sp"/></svg><svg class="icon"><use href="#i-yt"/></svg>
+    </span>
+  </nav>
+  <span class="burger"></span>
+</header>
+
+<section class="lp" id="top">
+  <div class="lp-bg"></div>
+  <div class="lp-wrap">
+    <div>
+      <span class="alertchip"><i></i>OPGELET!</span>
+      <h1>Zin in<br><span class="grad">Dich</span></h1>
+      <p>Onze nieuwe single samen met <b>Spik &amp; Span</b> komt eraan!</p>
+      <div class="act"><a class="pill solid" href="#">Houd me op de hoogte</a><a class="pill" href="#tour">Bekijk de tour</a></div>
+    </div>
+    <div class="glass single">
+      <div class="cover">Zin in<br>Dich<small>COVER VOLGT</small></div>
+      <div class="meta"><div><b>Zin in Dich</b><br><span>Promilaasj &amp; Spik &amp; Span</span></div><span class="badge">Binnenkort</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="tour">
+  <h2>Tour</h2>
+  <div class="tour">
+    <article class="gig"><div class="date">08<small>zo · nov</small></div><div><h3>Herenzitting</h3><p>Stoatje · Landgraaf</p></div><a class="btn" href="#">Meer info</a></article>
+    <article class="gig"><div class="date">21<small>za · nov</small></div><div><h3>Ex-Prinsenavond</h3><p>Corneliushuis · Heerlerheide</p></div><a class="btn" href="#">Meer info</a></article>
+    <article class="gig"><div class="date">28<small>za · nov</small></div><div><h3>11x11 Jubileum</h3><p>Sporthal de koeweide · Montford</p></div><a class="btn" href="#">Meer info</a></article>
+  </div>
+</section>
+
+<section id="muziek">
+  <h2>Muziek</h2>
+  <div class="cds">
+    <div><div class="cd"><div class="disc" style="background-image:url(../assets/img/ep-rockjesdaag.webp)"></div><img class="sleeve" src="../assets/img/ep-rockjesdaag.webp" alt="Rockjesdaag"></div>
+      <div class="cdcap"><b>Rockjesdaag</b><a class="btn red" href="#">Luister op Spotify</a></div></div>
+    <div><div class="cd"><div class="disc" style="background-image:url(../assets/img/ep-neet-allein.webp)"></div><img class="sleeve" src="../assets/img/ep-neet-allein.webp" alt="Neet allein"></div>
+      <div class="cdcap"><b>Neet allein</b><a class="btn red" href="#">Luister op Spotify</a></div></div>
+    <div><div class="cd"><div class="disc" style="background-image:url(../assets/img/ep-promilaasj.webp)"></div><img class="sleeve" src="../assets/img/ep-promilaasj.webp" alt="Promilaasj, Det zit hiej"></div>
+      <div class="cdcap"><b>Promilaasj</b><a class="btn red" href="#">Luister op Spotify</a></div></div>
+  </div>
+</section>
+
+<section id="video">
+  <h2>Video</h2>
+  <div class="vids">
+    <div class="vid"><div class="th"><img src="refs/yt-NfcCfGOxz0o.jpg" alt=""><span class="play"></span></div><b>Vastelaoves-Tour 2020</b></div>
+    <div class="vid"><div class="th"><img src="refs/yt-O1SFRd0IQ8I.jpg" alt=""><span class="play"></span></div><b>Promo Promilaasj Tour 2020</b></div>
+    <div class="vid"><div class="th"><img src="refs/yt-owj6G57DVhM.jpg" alt=""><span class="play"></span></div><b>De 11e van de 11e 2019: Medley</b></div>
+    <div class="vid"><div class="th"><img src="refs/yt-pFQBNqvZxKc.jpg" alt=""><span class="play"></span></div><b>D.A.N.S.E. quarantaine style!</b></div>
+  </div>
+</section>
+
+<section id="boeken">
+  <div class="cols">
+    <div>
+      <h2>Boekingen</h2>
+      <p style="margin-top:36px">Promilaasj is exclusief te boeken via Nr. 1 Artiesten:</p>
+      <img class="l1" src="refs/nr1.png" alt="Nr. 1 Artiesten">
+      <p>Zoerbeemden 31 | 6245 LR Eijsden<br>+31 4 33 65 25 97 | info@nr1artiesten.nl</p>
+    </div>
+    <div>
+      <h2 style="font-size:34px">Contact</h2>
+      <p style="margin-top:36px">BAND/PERS: info@promilaasj.nl</p>
+      <div class="rule"></div>
+      <h4 style="margin-top:0">Techniek &amp; crew</h4>
+      <img class="l2" src="refs/demo.png" alt="Demo Productions">
+      <p>Demo Productions<br>+31(0)46-433 7531<br>info@demoproductions.nl</p>
+    </div>
+  </div>
+</section>
+
+<section class="ig">
+  <div class="who"><span><svg class="icon" style="color:#fff"><use href="#i-ig"/></svg></span>promilaasj</div>
+  <div class="igrid">
+    <img src="refs/ig/ig1.jpg" alt=""><img src="refs/ig/ig2.jpg" alt=""><img src="refs/ig/ig5.jpg" alt=""><img src="refs/ig/ig4.jpg" alt=""><img src="refs/ig/ig6.jpg" alt=""><img src="refs/ig/ig8.jpg" alt="">
+  </div>
+  <div class="igb"><a href="#">meer...</a><a href="#">Volg ons op Instagram!</a></div>
+</section>
+
+<footer>
+  <div class="social"><svg class="icon"><use href="#i-fb"/></svg><svg class="icon"><use href="#i-ig"/></svg><svg class="icon"><use href="#i-sp"/></svg><svg class="icon"><use href="#i-yt"/></svg></div>
+  © Promilaasj
+</footer>
+</body>
+</html>

@@ -4,9 +4,9 @@ Requested changes, newest first. The status is at the top of each ticket. The Ch
 
 ## backlog-20260922-artwin-tour-sync — Auto-update tour dates from Artwin
 
-**Status:** open (research needed) · **Requested:** 2026-09-22
+**Status:** open, ready to scope with Sjef's Artwin details · **Requested:** 2026-09-22 · **Researched:** 2026-09-22
 
-**What:** Pull tour dates automatically from Artwin (the booking-agency system, which has a WordPress plugin) instead of hand-editing `assets/js/gigs.js`. Needs an approach that never puts an Artwin credential in the public repo or in browser-visible code — likely a scheduled GitHub Action that commits an updated `gigs.js`. Full details and open questions in `backlog/backlog-20260922-artwin-tour-sync.md`.
+**What:** Pull tour dates automatically from Artwin Live instead of hand-editing `assets/js/gigs.js`. Research found Artwin Live's tour-dates feed (iCalendar URL or widget ID) is a plain public identifier, not a secret — the credential-in-public-repo worry mostly dissolves. Plan: a scheduled GitHub Action fetches the public feed and commits an updated `gigs.js`. Blocked on Sjef getting that feed URL from Artwin Live / Nr.1 Artiesten. Full findings in `backlog/backlog-20260922-artwin-tour-sync.md`.
 
 ## backlog-20260922-custom-domain-promilaasj-nl — Point promilaasj.nl at the new site
 

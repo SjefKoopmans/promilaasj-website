@@ -2,6 +2,12 @@
 
 Requested changes, newest first. The status is at the top of each ticket. The Chronos board (project `promilaasj-website`) carries a short card per ticket; the details live here.
 
+## backlog-20260922-hero-teaser-video — Front page: play the teaser video instead of the "Cover volgt" snippet
+
+**Status:** open · **Requested:** 2026-09-22
+
+**What:** Show the uploaded teaser video (`assets/img/zin_in_dich_teaser.mp4`) in the hero's "Zin in Dich" card instead of the "Cover volgt" text placeholder. Full details in `backlog/backlog-20260922-hero-teaser-video.md`.
+
 ## backlog-20260920-replace-hero-photo — Front page: replace the stage photo (old band members)
 
 **Status:** ACTION NEEDED BY SJEF · **Requested:** 2026-09-20

@@ -154,7 +154,7 @@ for (const w of [1440, 900, 390, 320]) {
 
   check((await page.locator("#feat iframe").count()) === 0, "YouTube: nog niets geladen voor de klik");
   await page.click("#feat-btn");
-  check((await page.getAttribute("#feat iframe", "src")).startsWith("https://www.youtube-nocookie.com/embed/NfcCfGOxz0o"), "YouTube: uitgelichte video speelt na een klik");
+  check((await page.getAttribute("#feat iframe", "src")).startsWith("https://www.youtube-nocookie.com/embed/gMIfw0KoiA0"), "YouTube: uitgelichte video speelt na een klik");
   await page.click('#playlist [data-yt="O1SFRd0IQ8I"]');
   check((await page.getAttribute("#feat iframe", "src")).includes("O1SFRd0IQ8I"), "YouTube: afspeellijst wisselt van video");
   check((await page.getAttribute('#playlist [data-yt="O1SFRd0IQ8I"]', "class")).includes("is-active") && (await page.textContent("#feat-title")) === "Promo Promilaasj Tour 2020", "YouTube: actieve video is gemarkeerd");

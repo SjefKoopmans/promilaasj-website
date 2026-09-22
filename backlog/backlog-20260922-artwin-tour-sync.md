@@ -12,6 +12,8 @@ Side effect: this also fixes the pre-existing failing test (several hand-entered
 
 **Update 2026-09-22 (option status + year headers):** Sjef confirmed Artwin's `status` field: `"1"` = confirmed, `"0"` = option (not yet definitive); any other value is treated as an option too, to be safe. The sync now carries this through as `option: true` in `gigs.js`, and the tour section shows an "OPTIE" badge on those gigs and a year heading ("2026", "2027", …) above each year's group of cards. Fixed one real bug while building this: the year heading only spanned one grid column at desktop widths (the `.tour` grid goes 3-wide there) until `grid-column: 1 / -1` was added. Re-synced against the live feed: 22 bookings now (6 more since the first sync, 4 flagged as options), all mapped, `npm test` fully green. Added test coverage for both the year grouping and the option badge (`tests/smoke.mjs`).
 
+**Update 2026-09-22 (private bookings):** Sjef confirmed Artwin's `private` field the same way: `"1"` = besloten feest. These used to be dropped from the sync entirely; now they stay on the tour list (the date is still real and blocks the calendar) but with the title replaced by `"Besloten feest"` and no venue, city or url — none of the opdrachtgever/location details Artwin holds for that booking reach `gigs.js` or the site. Re-synced: 6 of the 28 current bookings are private and now show this way; `npm test` still green.
+
 **What:** Instead of Sjef hand-editing `assets/js/gigs.js`, pull the tour dates automatically from Artwin so the calendar updates itself.
 
 ## Research findings (2026-09-22)

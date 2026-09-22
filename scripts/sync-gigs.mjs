@@ -5,6 +5,8 @@
 // boekingsobject van Artwin, inclusief venue- en booking-telefoonnummers en adressen. Dit script
 // laat alleen de velden door die al in gigs.js stonden (date, title, venue, city, url) — de rest
 // wordt bewust nooit weggeschreven, ook niet als Artwin in de toekomst meer velden toevoegt.
+// Boekingen met private = "1" (besloten feesten) blijven zichtbaar als datum, maar met titel
+// "Besloten feest" en zonder venue/stad/link — nooit de naam van de opdrachtgever op de site.
 
 import { writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
@@ -53,18 +55,20 @@ function decodeEntities(s) {
 
 const skipped = [];
 const gigs = raw
-  .filter((g) => {
-    if (g && g.private === "1") { skipped.push(`${g.gig_id ?? "?"}: private boeking, overgeslagen`); return false; }
-    return true;
-  })
   .map((g) => {
     const date = typeof g.date_start === "string" ? g.date_start.slice(0, 10) : "";
+    // Artwin: private "1" = besloten feest. Blijft in de agenda staan (het optreden bestaat
+    // en telt mee voor de datum), maar zonder naam van de opdrachtgever/locatie — nooit de
+    // titel, venue, stad of link van een besloten boeking op de site zetten.
+    const isPrivate = g.private === "1";
+    if (isPrivate) {
+      // Artwin: status "1" = bevestigd, "0" = optie. Onbekende waarden liever als optie.
+      return { gig_id: g.gig_id, date, title: "Besloten feest", venue: "", city: "", url: "", option: g.status !== "1" };
+    }
     const title = decodeEntities((g.event?.title || "").trim() || (g.venue?.name || "").trim());
     const venue = decodeEntities((g.venue?.name || "").trim());
     const city = decodeEntities((g.venue?.city || "").trim());
     const ticketUrl = isHttpsUrl(g.event?.website_tickets) ? g.event.website_tickets : isHttpsUrl(g.event?.website) ? g.event.website : "";
-    // Artwin: status "1" = bevestigd, "0" = optie (nog niet definitief). Onbekende waarden
-    // behandelen we voor de zekerheid ook als optie, liever te voorzichtig dan te stellig.
     const option = g.status !== "1";
     return { gig_id: g.gig_id, date, title, venue, city, url: ticketUrl, option };
   })
@@ -101,6 +105,7 @@ const content = `// Agenda van Promilaasj.
 // date  = JJJJ-MM-DD (verplicht)   title = naam van het optreden (verplicht)
 // venue, city, url = optioneel     (url = link naar kaartverkoop of eventpagina)
 // option = true      = optioneel   (nog geen bevestigd optreden; toont een "Optie"-label)
+// Besloten feesten staan met titel "Besloten feest" en zonder venue/city/url (privacy).
 window.GIGS = [
 ${lines.join("\n")}
 ];

@@ -2,6 +2,12 @@
 
 Requested changes, newest first. The status is at the top of each ticket. The Chronos board (project `promilaasj-website`) carries a short card per ticket; the details live here.
 
+## backlog-20260920-replace-hero-photo — Front page: replace the stage photo (old band members)
+
+**Status:** ACTION NEEDED BY SJEF · **Requested:** 2026-09-20
+
+**What:** `assets/img/hero.webp` still shows the old band members. For now the photo sits at 78% so the singer and band are behind the "Zin in Dich" text. Sjef replaces it with a photo of the current lineup: overwrite `assets/img/hero.webp` (wide, 2000 px or more, WebP under about 200 KB) and tune `background-position` in `.lp-bg` (`assets/css/style.css`). Full steps in `backlog/backlog-20260920-replace-hero-photo.md`.
+
 ## backlog-20260920-hero-stage-photo — Front page: bring back the stage photo in the background
 
 **Status:** done · **Requested:** 2026-09-20 · **Closed:** 2026-09-20

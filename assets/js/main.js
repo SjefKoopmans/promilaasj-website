@@ -181,11 +181,41 @@
   setNewTab(laptop.matches);
   laptop.addEventListener("change", function (e) { setNewTab(e.matches); });
 
-  // ---------- Teaservideo: niet autoplayen als de bezoeker minder beweging wil ----------
+  // ---------- Teaservideo: speelt met geluid als de browser dat toestaat, anders gedempt met een knop om het geluid aan te zetten ----------
   var teaser = document.querySelector("video.cover");
-  if (teaser && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    teaser.removeAttribute("autoplay");
-    teaser.pause();
+  var muteBtn = document.querySelector(".mute-toggle");
+  function setMuteUI(muted) {
+    if (!muteBtn) return;
+    muteBtn.setAttribute("aria-pressed", String(muted));
+    muteBtn.setAttribute("aria-label", muted ? "Zet het geluid van de teaser aan" : "Zet het geluid van de teaser uit");
+    var use = muteBtn.querySelector("use");
+    if (use) use.setAttribute("href", muted ? "#i-mute" : "#i-vol");
+  }
+  if (teaser) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      teaser.muted = true;
+      teaser.pause();
+      setMuteUI(true);
+    } else {
+      teaser.muted = false;
+      var attempt = teaser.play();
+      if (attempt && attempt.catch) {
+        attempt.catch(function () {
+          // Browser blokkeert afspelen met geluid zonder klik: gedempt verder afspelen, knop biedt geluid aan.
+          teaser.muted = true;
+          teaser.play().catch(function () {});
+          setMuteUI(true);
+        });
+      }
+      setMuteUI(teaser.muted);
+    }
+    if (muteBtn) {
+      muteBtn.addEventListener("click", function () {
+        teaser.muted = !teaser.muted;
+        if (!teaser.muted) teaser.play().catch(function () {});
+        setMuteUI(teaser.muted);
+      });
+    }
   }
 
   // ---------- Jaartal in de footer ----------

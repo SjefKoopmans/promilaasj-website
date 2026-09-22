@@ -1,41 +1,27 @@
 // Agenda van Promilaasj.
-// Voeg een optreden toe door een regel toe te voegen aan de lijst hieronder.
-// Optredens waarvan de datum voorbij is, verdwijnen vanzelf van de site.
-//
-// Voorbeeld:
-//   { date: "2026-11-11", title: "11e van de 11e", venue: "Markt", city: "Roermond", url: "https://…" },
+// Dit bestand wordt automatisch bijgewerkt vanuit Artwin Live door
+// .github/workflows/sync-gigs.yml (zie ook backlog/backlog-20260922-artwin-tour-sync.md).
+// Handmatige wijzigingen hier worden bij de volgende sync overschreven — voeg een optreden
+// toe of wijzig het in Artwin Live, niet hier. Staat de sync (tijdelijk) uit, dan kun je dit
+// bestand net als vroeger gewoon met de hand bijwerken; het format hieronder blijft hetzelfde.
 //
 // date  = JJJJ-MM-DD (verplicht)   title = naam van het optreden (verplicht)
 // venue, city, url = optioneel     (url = link naar kaartverkoop of eventpagina)
 window.GIGS = [
-	{ date: "2026-09-19", title: "Woeësj-sjtok", venue: "Markt", city: "Simpelveld", url: "https://…" },
-	{ date: "2026-11-09", title: "Herenzitting", venue: "Stroatje", city: "Landgraaf", url: "https://…" },
-	{ date: "2026-11-21", title: "Ex-Prinsenavond", venue: "Corneliushuis", city: "Heerlerheide", url: "https://…" },
-	{ date: "2026-11-28", title: "11x11 Jubileum", venue: "Sporthal de koeweide", city: "Montford", url: "https://…" },
-	{ date: "2027-01-08", title: "Prinsebal Wuilus", venue: "VILGAARD BMV DE", city: "Velden", url: "https://…" },
-	{ date: "2027-01-09", title: "Bombakkes Gennep", venue: "Zaal 4 Events", city: "Gennep", url: "https://…" },
-	{ date: "2027-01-17", title: "Dameszitting", venue: "Trefpunt", city: "Elsloo", url: "https://…" },
-	{ date: "2027-01-17", title: "Matinee", venue: "Gemeentehuis", city: "Nieuwstadt", url: "https://…" },
-	{ date: "2027-01-24", title: "Dameszitting", venue: "Witte kerkje", city: "Roermond", url: "https://…" },
-	{ date: "2027-01-29", title: "D'r ouwe voetbalsjong", venue: "Flexiforum", city: "Kerkrade", url: "https://…" },
-	{ date: "2027-01-31", title: "Herenzitting", venue: "Borenburg", city: "Voerendaal", url: "https://…" },
-	{ date: "2027-02-05", title: "", venue: "", city: "", url: "https://…" },
-	{ date: "2027-02-06", title: "", venue: "", city: "", url: "https://…" },
-	{ date: "2027-02-06", title: "", venue: "", city: "", url: "https://…" },
-	{ date: "2027-02-07", title: "", venue: "", city: "", url: "https://…" },
-	{ date: "2027-02-08", title: "", venue: "", city: "", url: "https://…" },
-	{ date: "2027-02-09", title: "", venue: "", city: "", url: "https://…" },
-	{ date: "2027-02-09", title: "", venue: "", city: "", url: "https://…" },
-	{ date: "2027-03-06", title: "(optie)", venue: "", city: "", url: "https://…" },
-	{ date: "2027-07-18", title: "", venue: "", city: "", url: "https://…" },
-	{ date: "2027-10-16", title: "(optie)", venue: "", city: "", url: "https://…" },
-	{ date: "2028-01-21", title: "", venue: "", city: "", url: "https://…" },
-	{ date: "2028-02-26", title: "", venue: "", city: "", url: "https://…" },
-	{ date: "2028-02-26", title: "", venue: "", city: "", url: "https://…" },
-	{ date: "2028-02-27", title: "", venue: "", city: "", url: "https://…" },
-	{ date: "2028-02-27", title: "", venue: "", city: "", url: "https://…" },
-	{ date: "2028-02-28", title: "(optie)", venue: "", city: "", url: "https://…" },
-	{ date: "2028-02-29", title: "(optie)", venue: "", city: "", url: "https://…" },
-	{ date: "2029-02-13", title: "(optie)", venue: "", city: "", url: "https://…" },
-	{ date: "2029-03-05", title: "(optie)", venue: "", city: "", url: "https://…" },
+	{ date: "2026-11-08", title: "Herenzitting", venue: "STROATJE", city: "Landgraaf" },
+	{ date: "2027-01-08", title: "Prinsebal Wuilus", venue: "VILGAARD BMV DE", city: "Velden" },
+	{ date: "2027-01-09", title: "ZAAL 4 EVENTS", venue: "ZAAL 4 EVENTS", city: "Gennep" },
+	{ date: "2027-01-17", title: "dameszitting", venue: "TREFPUNT", city: "Elsloo" },
+	{ date: "2027-01-17", title: "matinee", venue: "GEMEENTEHUIS NIEUWSTADT", city: "Nieuwstadt" },
+	{ date: "2027-01-24", title: "Dameszitting", venue: "WITTE KERKJE", city: "Roermond" },
+	{ date: "2027-01-29", title: "D'r Ouwe Voetbalsjong", venue: "FLEXIFORUM", city: "Kerkrade" },
+	{ date: "2027-02-05", title: "Carnaval", venue: "KUNDERHOES", city: "Voerendaal" },
+	{ date: "2027-02-06", title: "Sjtasiefestasie", venue: "STATIONSPLEIN", city: "Roermond" },
+	{ date: "2027-02-06", title: "FANFAREZAAL \"LEI VAN NAER\"", venue: "FANFAREZAAL \"LEI VAN NAER\"", city: "Echt" },
+	{ date: "2027-02-07", title: "Wieert Alaaif", venue: "NIEUWE MARKT", city: "Weert" },
+	{ date: "2027-02-08", title: "Tröötekonkoer", venue: "MARKT SITTARD", city: "Sittard" },
+	{ date: "2027-02-09", title: "Carnaval", venue: "MARKT EYGELSHOVEN", city: "Eygelshoven" },
+	{ date: "2027-07-18", title: "ZLF 2027", venue: "Feestweide ZLF 2027", city: "Oirsbeek" },
+	{ date: "2028-02-26", title: "DON BOSCO", venue: "DON BOSCO", city: "Heel" },
+	{ date: "2028-02-27", title: "KLAPROOS", venue: "KLAPROOS", city: "Siebengewald" },
 ];

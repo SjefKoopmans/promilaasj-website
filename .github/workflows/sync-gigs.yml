@@ -1,0 +1,49 @@
+name: Tourdata synchroniseren vanuit Artwin
+
+on:
+  schedule:
+    # Elke dag rond 07:00 in Nederland (05:00 UTC in de winter, 06:00 UTC in de zomer -
+    # cron kent geen tijdzones, dus dit schuift een uur mee met de zomertijd).
+    - cron: "0 5 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-gigs
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Tourdata ophalen bij Artwin en gigs.js opnieuw opbouwen
+        env:
+          ARTWIN_ICAL_URL: ${{ secrets.ARTWIN_ICAL_URL }}
+        run: node scripts/sync-gigs.mjs
+
+      - name: Rooktest op de site met de nieuwe agenda
+        env:
+          BROWSER_CHANNEL: chrome
+        run: |
+          npm ci
+          npm test
+
+      - name: Wijziging committen en pushen (alleen als er echt iets veranderd is)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/js/gigs.js
+          if git diff --cached --quiet; then
+            echo "Geen wijzigingen in gigs.js — niets te committen."
+          else
+            git commit -m "Sync tourdata vanuit Artwin Live [automated]"
+            git push
+          fi

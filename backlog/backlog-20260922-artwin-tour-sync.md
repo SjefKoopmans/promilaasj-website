@@ -1,6 +1,14 @@
 # backlog-20260922-artwin-tour-sync — Auto-update tour dates from Artwin
 
-**Status:** open, ready to scope with Sjef's Artwin details · **Requested:** 2026-09-22 · **Researched:** 2026-09-22
+**Status:** built (on branch `artwin-tour-sync`, not yet merged) · **Requested:** 2026-09-22 · **Researched:** 2026-09-22 · **Built:** 2026-09-22
+
+**Outcome:** Sjef created the widget (type JSON, "Public confirmed bookings") and added its URL as the `ARTWIN_ICAL_URL` GitHub Actions secret. `scripts/sync-gigs.mjs` fetches it and rebuilds `assets/js/gigs.js`, keeping only `date`, `title`, `venue`, `city`, `url` — venue/booking phone numbers, addresses and coordinates that Artwin includes are never read into the output. `.github/workflows/sync-gigs.yml` runs it daily (and on manual trigger), runs `npm test` against the result, and commits `gigs.js` only if it changed.
+
+Tested locally against the real feed: 16 bookings came back, all mapped cleanly (0 skipped). Two real issues found and fixed along the way:
+- Artwin HTML-encodes some names (e.g. `&quot;`) — the script now decodes common entities so they don't show up literally on the site.
+- A few bookings have no `event.title` in Artwin; the script falls back to the venue name, which Artwin stores in ALL CAPS (e.g. "ZAAL 4 EVENTS", "DON BOSCO") — displays as-is, no automatic re-casing, see open question 4.
+
+Side effect: this also fixes the pre-existing failing test (several hand-entered rows in the old `gigs.js` had a blank title) — Artwin's data has none, so `npm test` is fully green for the first time. It also corrected a date: the old manual entry for "Herenzitting" at Stroatje said 2026-11-09; Artwin's own record says 2026-11-08.
 
 **What:** Instead of Sjef hand-editing `assets/js/gigs.js`, pull the tour dates automatically from Artwin so the calendar updates itself.
 
@@ -34,9 +42,11 @@ Separately, there's a **brand-new (v1.0.0, released 2026-09-21) official WordPre
 - `npm test` still passes after a sync.
 
 ## Open questions for Sjef
-1. Does Promilaasj (or Nr.1 Artiesten on their behalf) already have an Artwin Live account/calendar for this band? If it's the agency's account, someone there needs to generate the iCalendar-URL or widget ID and share it — it's not sensitive, but Sjef likely doesn't have login access himself.
-2. Is daily/every-few-hours sync frequent enough, or do new gigs need to show up within minutes?
-3. Do the fields Artwin exposes (title, venue/schedule, date/time, confirmed vs. tentative) map cleanly onto `gigs.js`'s `{date, title, venue, city, url}` shape, or is some manual cleanup still needed (e.g. Artwin may not have a ticket-sales URL per gig)?
+1. ~~Does Promilaasj already have an Artwin Live calendar?~~ Resolved — Sjef created the widget himself.
+2. Is once a day frequent enough, or do new gigs need to show up sooner? (Easy to change: one line in the workflow's cron schedule, or just click "Run workflow" manually any time.)
+3. ~~Do the fields map cleanly?~~ Mostly — see the venue-as-title fallback below.
+4. Some bookings have no title in Artwin, so the site shows the venue name (in Artwin's stored ALL-CAPS form) instead, e.g. "ZAAL 4 EVENTS" as both the heading and the venue line. Fine to leave as-is, or should we title-case these automatically? (Risk: an automatic re-casing rule could mangle acronyms or Limburgish spellings — the more reliable fix is adding a proper event title in Artwin for those bookings.)
+5. Not yet verified: whether GitHub's `ubuntu-latest` runner has Google Chrome available for the `npm test` step in the workflow (it's normally preinstalled, but this hasn't been confirmed by an actual run yet — worth checking the first time the workflow fires, either the daily schedule or a manual "Run workflow" click).
 
 ## Sources
 - [WordPress plugin — Artwin Live knowledgebase](https://support.artwinlive.com/knowledgebase/35/WordPress-plugin.html?language=dutch)

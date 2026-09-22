@@ -89,15 +89,20 @@ for (const w of [1440, 900, 390, 320]) {
     {date:"2000-01-01",title:"Al geweest",city:"Nergens"},
     {date:"2999-02-03",title:"Vastelaovend",city:"Sittard",url:"https://…"},
     {date:"2999-02-30",title:"Bestaat niet"},
-    {date:"2999-03-04",title:"Javascript-link",url:"javascript:alert(1)"}];`;
+    {date:"2999-03-04",title:"Javascript-link",url:"javascript:alert(1)"},
+    {date:"3000-01-05",title:"Nieuw jaar optie",option:true}];`;
   const { ctx, page } = await open({ width: 1200, height: 800 }, data);
   const titles = await page.$$eval("#gigs .gig h3", (n) => n.map((e) => e.textContent));
-  check(JSON.stringify(titles) === JSON.stringify(["Vastelaovend", "Javascript-link", "11e van de 11e <b>x</b>"]), "agenda: gesorteerd, verleden en onmogelijke datums weg", JSON.stringify(titles));
+  check(JSON.stringify(titles) === JSON.stringify(["Vastelaovend", "Javascript-link", "11e van de 11e <b>x</b>", "Nieuw jaar optie"]), "agenda: gesorteerd, verleden en onmogelijke datums weg", JSON.stringify(titles));
   const links = await page.$$eval("#gigs a", (n) => n.map((e) => e.href));
   check(JSON.stringify(links) === JSON.stringify(["https://example.com/kaarten"]), "agenda: alleen echte https-links (plaatshouder '…' en javascript: genegeerd)", JSON.stringify(links));
   check((await page.getAttribute("#gigs a", "target")) === "_blank", "agenda: 'Meer info' opent op een laptop in een nieuw tabblad");
   check((await page.$$("#gigs .gig b")).length === 0, "agenda: tekst wordt niet als HTML geïnterpreteerd");
   check(await page.isHidden("#gigs-empty"), "agenda: lege melding verborgen zodra er optredens zijn");
+  const years = await page.$$eval("#gigs .tour-year", (n) => n.map((e) => e.textContent));
+  check(JSON.stringify(years) === JSON.stringify(["2999", "3000"]), "agenda: een jaarkop per jaar, in volgorde", JSON.stringify(years));
+  const optionTitles = await page.$$eval("#gigs .gig", (n) => n.filter((e) => e.querySelector(".option-badge")).map((e) => e.querySelector("h3").textContent));
+  check(JSON.stringify(optionTitles) === JSON.stringify(["Nieuw jaar optie"]), "agenda: 'Optie'-label alleen bij option:true", JSON.stringify(optionTitles));
   await ctx.close();
 
   const none = await open({ width: 1200, height: 800 }, "window.GIGS=[];");

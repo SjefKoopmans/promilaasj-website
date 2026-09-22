@@ -123,15 +123,21 @@
     .sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
 
   if (list && gigs.length) {
+    var year = null;
     gigs.forEach(function (g) {
       var d = realDate(g.date);
-      var li = el("li", "gig");
+      if (d.getFullYear() !== year) {
+        year = d.getFullYear();
+        list.append(el("h3", "tour-year", String(year)));
+      }
+      var li = el("article", "gig");
 
       var top = el("div", "top");
       top.append(el("div", "num", String(d.getDate())), el("span", "chip", DAYS[d.getDay()] + " · " + MONTHS[d.getMonth()]));
 
       var info = el("div");
       info.append(el("h3", "", g.title));
+      if (g.option) info.append(el("span", "option-badge", "Optie"));
       var where = [g.venue, g.city].filter(Boolean).join(" · ");
       if (where) info.append(el("p", "", where));
 

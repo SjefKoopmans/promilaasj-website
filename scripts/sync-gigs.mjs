@@ -63,7 +63,10 @@ const gigs = raw
     const venue = decodeEntities((g.venue?.name || "").trim());
     const city = decodeEntities((g.venue?.city || "").trim());
     const ticketUrl = isHttpsUrl(g.event?.website_tickets) ? g.event.website_tickets : isHttpsUrl(g.event?.website) ? g.event.website : "";
-    return { gig_id: g.gig_id, date, title, venue, city, url: ticketUrl };
+    // Artwin: status "1" = bevestigd, "0" = optie (nog niet definitief). Onbekende waarden
+    // behandelen we voor de zekerheid ook als optie, liever te voorzichtig dan te stellig.
+    const option = g.status !== "1";
+    return { gig_id: g.gig_id, date, title, venue, city, url: ticketUrl, option };
   })
   .filter((g) => {
     if (!DATE_RE.test(g.date) || !g.title) { skipped.push(`${g.gig_id ?? "?"}: geen geldige datum of titel, overgeslagen`); return false; }
@@ -84,6 +87,7 @@ const lines = gigs.map((g) => {
   if (g.venue) parts.push(`venue: ${JSON.stringify(g.venue)}`);
   if (g.city) parts.push(`city: ${JSON.stringify(g.city)}`);
   if (g.url) parts.push(`url: ${JSON.stringify(g.url)}`);
+  if (g.option) parts.push(`option: true`);
   return `\t{ ${parts.join(", ")} },`;
 });
 
@@ -96,6 +100,7 @@ const content = `// Agenda van Promilaasj.
 //
 // date  = JJJJ-MM-DD (verplicht)   title = naam van het optreden (verplicht)
 // venue, city, url = optioneel     (url = link naar kaartverkoop of eventpagina)
+// option = true      = optioneel   (nog geen bevestigd optreden; toont een "Optie"-label)
 window.GIGS = [
 ${lines.join("\n")}
 ];

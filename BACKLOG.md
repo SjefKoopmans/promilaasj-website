@@ -6,7 +6,7 @@ Requested changes, newest first. The status is at the top of each ticket. The Ch
 
 **Status:** built (on branch `artwin-tour-sync`, not yet merged) · **Requested:** 2026-09-22 · **Built:** 2026-09-22
 
-**What:** Pull tour dates automatically from Artwin Live instead of hand-editing `assets/js/gigs.js`. A daily GitHub Action (`scripts/sync-gigs.mjs` + `.github/workflows/sync-gigs.yml`) fetches Sjef's Artwin widget (URL kept in the `ARTWIN_ICAL_URL` secret, never in the repo) and rewrites `gigs.js` with only the safe fields — no phone numbers or addresses, which Artwin's feed does include. Tested locally against the real feed (16 bookings, all mapped, `npm test` fully green). Full outcome and open questions in `backlog/backlog-20260922-artwin-tour-sync.md`.
+**What:** Pull tour dates automatically from Artwin Live instead of hand-editing `assets/js/gigs.js`. A daily GitHub Action (`scripts/sync-gigs.mjs` + `.github/workflows/sync-gigs.yml`) fetches Sjef's Artwin widget (URL kept in the `ARTWIN_ICAL_URL` secret, never in the repo) and rewrites `gigs.js` with only the safe fields — no phone numbers or addresses, which Artwin's feed does include. Confirmed bookings and options (Artwin's `status` field) now both come through, with an "OPTIE" badge and a year heading (2026, 2027, …) per group on the site. Tested locally against the real feed (22 bookings, all mapped, `npm test` fully green). Full outcome and open questions in `backlog/backlog-20260922-artwin-tour-sync.md`.
 
 ## backlog-20260922-custom-domain-promilaasj-nl — Point promilaasj.nl at the new site
 

@@ -10,6 +10,8 @@ Tested locally against the real feed: 16 bookings came back, all mapped cleanly 
 
 Side effect: this also fixes the pre-existing failing test (several hand-entered rows in the old `gigs.js` had a blank title) — Artwin's data has none, so `npm test` is fully green for the first time. It also corrected a date: the old manual entry for "Herenzitting" at Stroatje said 2026-11-09; Artwin's own record says 2026-11-08.
 
+**Update 2026-09-22 (option status + year headers):** Sjef confirmed Artwin's `status` field: `"1"` = confirmed, `"0"` = option (not yet definitive); any other value is treated as an option too, to be safe. The sync now carries this through as `option: true` in `gigs.js`, and the tour section shows an "OPTIE" badge on those gigs and a year heading ("2026", "2027", …) above each year's group of cards. Fixed one real bug while building this: the year heading only spanned one grid column at desktop widths (the `.tour` grid goes 3-wide there) until `grid-column: 1 / -1` was added. Re-synced against the live feed: 22 bookings now (6 more since the first sync, 4 flagged as options), all mapped, `npm test` fully green. Added test coverage for both the year grouping and the option badge (`tests/smoke.mjs`).
+
 **What:** Instead of Sjef hand-editing `assets/js/gigs.js`, pull the tour dates automatically from Artwin so the calendar updates itself.
 
 ## Research findings (2026-09-22)

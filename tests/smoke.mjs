@@ -7,7 +7,7 @@ import { dirname, extname, join, normalize } from "node:path";
 import { chromium } from "playwright-core";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const TYPES = { ".html": "text/html; charset=utf-8", ".css": "text/css", ".js": "text/javascript", ".webp": "image/webp", ".jpg": "image/jpeg", ".png": "image/png", ".woff2": "font/woff2" };
+const TYPES = { ".html": "text/html; charset=utf-8", ".css": "text/css", ".js": "text/javascript", ".webp": "image/webp", ".jpg": "image/jpeg", ".png": "image/png", ".woff2": "font/woff2", ".mp4": "video/mp4" };
 
 const server = http.createServer(async (req, res) => {
   try {
@@ -15,8 +15,8 @@ const server = http.createServer(async (req, res) => {
     if (p.endsWith("/")) p += "index.html";
     const file = normalize(join(ROOT, p));
     if (!file.startsWith(ROOT)) throw new Error("outside root");
-    await stat(file);
-    res.writeHead(200, { "content-type": TYPES[extname(file)] || "application/octet-stream" });
+    const s = await stat(file);
+    res.writeHead(200, { "content-type": TYPES[extname(file)] || "application/octet-stream", "content-length": s.size, "accept-ranges": "bytes" });
     res.end(await readFile(file));
   } catch {
     res.writeHead(404); res.end("not found");
@@ -263,6 +263,28 @@ for (const [w, h] of [[1440, 900], [1024, 768], [390, 844]]) {
     check(ratio >= needed, `voorpagina ${w}px: ${what} leesbaar over de foto (contrast ${ratio.toFixed(1)}, minimaal ${needed})`);
   }
   await ctx.close();
+}
+
+// 9. Teaservideo: speelt gedempt in een lus, met poster, en niet automatisch bij 'minder beweging'
+{
+  const { ctx, page } = await open({ width: 1440, height: 900 });
+  await page.waitForFunction(() => (document.querySelector("video.cover") || {}).readyState >= 1, null, { timeout: 8000 }).catch(() => {});
+  const v = await page.evaluate(() => {
+    const el = document.querySelector("video.cover");
+    return el && { muted: el.muted, loop: el.loop, hasPoster: !!el.getAttribute("poster"), w: el.videoWidth, h: el.videoHeight };
+  });
+  check(!!v, "teaservideo staat in de 'Zin in Dich'-kaart");
+  check(!!v && v.muted && v.loop && v.hasPoster, "teaservideo is gedempt, speelt in een lus en heeft een poster", JSON.stringify(v));
+  check(!!v && v.w > 0 && v.h > 0, "teaservideo laadt (heeft afmetingen)", JSON.stringify(v));
+  await ctx.close();
+
+  const reduced = await browser.newContext({ viewport: { width: 1440, height: 900 }, reducedMotion: "reduce" });
+  const rp = await reduced.newPage();
+  await rp.goto(BASE, { waitUntil: "load" });
+  await rp.waitForTimeout(300);
+  const paused = await rp.evaluate(() => document.querySelector("video.cover")?.paused);
+  check(paused === true, "teaservideo speelt niet automatisch af bij 'minder beweging'");
+  await reduced.close();
 }
 
 await browser.close();

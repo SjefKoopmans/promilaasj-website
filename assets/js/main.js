@@ -181,6 +181,13 @@
   setNewTab(laptop.matches);
   laptop.addEventListener("change", function (e) { setNewTab(e.matches); });
 
+  // ---------- Teaservideo: niet autoplayen als de bezoeker minder beweging wil ----------
+  var teaser = document.querySelector("video.cover");
+  if (teaser && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    teaser.removeAttribute("autoplay");
+    teaser.pause();
+  }
+
   // ---------- Jaartal in de footer ----------
   var year = document.getElementById("year");
   if (year) year.textContent = String(now.getFullYear());

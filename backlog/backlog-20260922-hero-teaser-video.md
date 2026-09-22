@@ -1,6 +1,8 @@
 # backlog-20260922-hero-teaser-video — Front page: play the teaser video instead of the "Cover volgt" snippet
 
-**Status:** open · **Requested:** 2026-09-22
+**Status:** built (on branch `hero-teaser-video`) · **Requested:** 2026-09-22 · **Built:** 2026-09-22
+
+**Outcome:** The "Cover volgt" placeholder is now a `<video>` (`assets/video/zin-in-dich-teaser.mp4`, moved out of `assets/img/`) with a poster frame (`assets/img/zin-in-dich-teaser-poster.jpg`, grabbed from the video itself). It autoplays muted and loops on phone, tablet and laptop, keeps the rotated "single" card look, and stays paused on the poster frame for visitors with "reduce motion" set. The "Zin in Dich" / "Binnenkort" caption is unchanged (open question 1 below). `npm test` has a new check for this (autoplay/muted/loop/poster, loads, and the reduced-motion case) and passes; a pre-existing, unrelated failure in the tour-dates check (`gigs.js`, some rows still missing a title) is not part of this ticket. Not yet merged into `build-1c`.
 
 **What:** In the hero section, the "ZIN IN DICH — Cover volgt" card should show the teaser video the user uploaded instead of the placeholder text card.
 

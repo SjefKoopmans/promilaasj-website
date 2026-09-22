@@ -4,9 +4,9 @@ Requested changes, newest first. The status is at the top of each ticket. The Ch
 
 ## backlog-20260922-hero-teaser-video — Front page: play the teaser video instead of the "Cover volgt" snippet
 
-**Status:** open · **Requested:** 2026-09-22
+**Status:** built (on branch `hero-teaser-video`, not yet merged) · **Requested:** 2026-09-22 · **Built:** 2026-09-22
 
-**What:** Show the uploaded teaser video (`assets/img/zin_in_dich_teaser.mp4`) in the hero's "Zin in Dich" card instead of the "Cover volgt" text placeholder. Full details in `backlog/backlog-20260922-hero-teaser-video.md`.
+**What:** Show the uploaded teaser video in the hero's "Zin in Dich" card instead of the "Cover volgt" text placeholder. Full outcome in `backlog/backlog-20260922-hero-teaser-video.md`.
 
 ## backlog-20260920-replace-hero-photo — Front page: replace the stage photo (old band members)
 

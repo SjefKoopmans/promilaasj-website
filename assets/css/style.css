@@ -129,7 +129,7 @@ h3 { font: 800 1.4rem/1.15 var(--display); text-transform: uppercase; letter-spa
 .single { max-width: 340px; transform: rotate(2.5deg); }
 .cover { aspect-ratio: 1; border-radius: 18px; position: relative; display: grid; place-items: center; text-align: center; padding: 20px; font: 800 2.25rem/.98 var(--display); letter-spacing: -.03em; text-transform: uppercase; color: #fff; background: radial-gradient(120% 90% at 20% 10%, #ff9f0a, transparent 55%), radial-gradient(90% 80% at 90% 100%, #ff2d3d, transparent 60%), #1a0a0a; }
 .cover small { position: absolute; left: 14px; bottom: 12px; font: 700 .7rem/1 var(--display); letter-spacing: .14em; text-transform: uppercase; opacity: .85; }
-img.cover { width: 100%; object-fit: cover; padding: 0; }
+img.cover, video.cover { width: 100%; object-fit: cover; padding: 0; }
 .meta { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 16px 6px 4px; }
 .meta b { display: block; font: 800 1rem/1.2 var(--display); }
 .meta span { color: #b4b4bc; font-size: .875rem; }

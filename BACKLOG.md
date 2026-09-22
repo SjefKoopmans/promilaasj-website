@@ -2,6 +2,18 @@
 
 Requested changes, newest first. The status is at the top of each ticket. The Chronos board (project `promilaasj-website`) carries a short card per ticket; the details live here.
 
+## backlog-20260922-artwin-tour-sync — Auto-update tour dates from Artwin
+
+**Status:** open (research needed) · **Requested:** 2026-09-22
+
+**What:** Pull tour dates automatically from Artwin (the booking-agency system, which has a WordPress plugin) instead of hand-editing `assets/js/gigs.js`. Needs an approach that never puts an Artwin credential in the public repo or in browser-visible code — likely a scheduled GitHub Action that commits an updated `gigs.js`. Full details and open questions in `backlog/backlog-20260922-artwin-tour-sync.md`.
+
+## backlog-20260922-custom-domain-promilaasj-nl — Point promilaasj.nl at the new site
+
+**Status:** ACTION NEEDED BY SJEF · **Requested:** 2026-09-22
+
+**What:** Switch `www.promilaasj.nl` from the current WordPress host to the new GitHub Pages site. GitHub side is ready (repo public, Pages enabled); needs DNS changed at hosting2go.nl, which needs finding out who holds that login. Steps in `backlog/backlog-20260922-custom-domain-promilaasj-nl.md`.
+
 ## backlog-20260922-hero-teaser-video — Front page: play the teaser video instead of the "Cover volgt" snippet
 
 **Status:** built (on branch `hero-teaser-video`, not yet merged) · **Requested:** 2026-09-22 · **Built:** 2026-09-22

@@ -50,7 +50,7 @@ async function open(viewport, gigsOverride) {
 {
   const { ctx, page, problems } = await open({ width: 1440, height: 900 });
   const ids = await page.$$eval("main > section", (s) => s.map((e) => e.id));
-  check(JSON.stringify(ids) === JSON.stringify(["top", "tour", "muziek", "video", "boeken"]), "secties in de afgesproken volgorde", ids.join(", "));
+  check(JSON.stringify(ids) === JSON.stringify(["top", "over-ons", "tour", "muziek", "video", "boeken"]), "secties in de afgesproken volgorde", ids.join(", "));
   check((await page.textContent("h1")).replace(/\s+/g, " ").trim() === "Zin in Dich", "h1 is 'Zin in Dich'");
   check((await page.locator("text=Opgelet!").count()) > 0, "OPGELET-aankondiging staat bovenaan");
 

@@ -108,13 +108,15 @@ h3 { font: 800 1.4rem/1.15 var(--display); text-transform: uppercase; letter-spa
 .nav-links.open a { padding: 16px; font-size: .9rem; }
 
 /* ---------- 1. Aankondiging ---------- */
-.lp { position: relative; min-height: 100svh; display: flex; align-items: center; padding: 130px 0 90px; overflow: hidden; isolation: isolate; color: #f5f5f7; background: #09090b; }
+.lp { position: relative; min-height: 100svh; display: flex; align-items: center; padding: 210px 0 90px; overflow: hidden; isolation: isolate; color: #f5f5f7; background: #09090b; }
 /* De hoofdfoto (het grote podium): overschrijf assets/img/hero.webp om hem te vervangen.
    De % is welk deel van de brede foto zichtbaar is: lager = meer naar links, hoger = meer naar rechts.
    Nu 78%: zanger en band staan achter de tekst "Zin in Dich". Bij een andere foto deze % opnieuw afstellen. */
 .lp-bg { position: absolute; inset: 0; z-index: -2; background: #09090b url("../img/hero.webp") 78% center / cover no-repeat; }
 /* Donkere laag over de foto: een zachte donkere plek achter de tekst (links), verder blijft het podium zichtbaar. */
 .lp::after { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(ellipse 58% 75% at 17% 52%, rgba(9, 9, 11, .62) 0%, rgba(9, 9, 11, 0) 100%), linear-gradient(90deg, rgba(9, 9, 11, .8) 0%, rgba(9, 9, 11, .5) 50%, rgba(9, 9, 11, .15) 100%), linear-gradient(0deg, #09090b 0%, transparent 26%); }
+/* Bandnaam (presskit 2026, "Bandnaam 1") in het midden, net onder het zwevende menu */
+.lp-brand { position: absolute; top: 96px; left: 50%; transform: translateX(-50%); width: clamp(240px, 42vw, 560px); height: auto; filter: drop-shadow(0 4px 18px rgba(0, 0, 0, .45)); }
 .lp-wrap { display: grid; gap: 48px; align-items: center; width: 100%; }
 .alertchip { display: inline-flex; align-items: center; gap: 10px; padding: 10px 18px; border-radius: 999px; background: rgba(255, 45, 61, .14); border: 1px solid rgba(255, 45, 61, .55); font: 800 .8rem/1 var(--display); letter-spacing: .2em; text-transform: uppercase; color: #ff6a73; }
 .alertchip i { width: 9px; height: 9px; border-radius: 50%; background: #ff2d3d; box-shadow: 0 0 0 0 rgba(255, 45, 61, .7); animation: pulse 1.8s infinite; }
@@ -137,6 +139,15 @@ img.cover, video.cover { width: 100%; object-fit: cover; padding: 0; }
 .meta b { display: block; font: 800 1rem/1.2 var(--display); }
 .meta span { color: #b4b4bc; font-size: .875rem; }
 .meta .badge { padding: 8px 14px; border-radius: 999px; background: #fff; color: #111; font: 800 .7rem/1 var(--display); letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
+
+/* ---------- Over ons ---------- */
+.about-sec { padding-bottom: 110px; }
+.about { display: grid; gap: 28px; }
+.about-text { max-width: 44rem; }
+.about-text p { margin-top: 18px; color: #444; font-size: 1.125rem; }
+.about-text p:first-child { margin-top: 0; }
+.about-text .about-lead { font: 700 clamp(1.35rem, 2.4vw, 1.75rem)/1.35 var(--display); letter-spacing: -.01em; color: var(--ink); }
+.about-text .about-punch { display: inline-block; font: 800 1.05rem/1.4 var(--display); text-transform: uppercase; letter-spacing: .01em; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
 /* ---------- 2. Tour ---------- */
 .tour-sec { background: var(--grey); padding: 110px 0 120px; }
@@ -255,6 +266,7 @@ a.cd, .cd { position: relative; display: block; width: 100%; max-width: 300px; a
   .contact .nr1 { grid-column: auto; }
 }
 @media (min-width: 980px) {
+  .about { grid-template-columns: .8fr 1.2fr; gap: 64px; align-items: start; }
   .nav { padding-left: 18px; }
   .nav-links { display: flex; }
   .nav-social { display: flex; }
@@ -264,13 +276,15 @@ a.cd, .cd { position: relative; display: block; width: 100%; max-width: 300px; a
 }
 @media (max-width: 719px) {
   .wrap { padding: 0 20px; }
-  .lp { padding: 110px 0 64px; min-height: 0; }
+  .lp { padding: 176px 0 64px; min-height: 0; }
+  .lp-brand { top: 96px; width: min(74vw, 320px); }
   .lp-bg { background-position: 56% center; }
   /* de tekst loopt hier over de hele breedte: de foto overal donkerder maken */
   .lp::after { background: linear-gradient(180deg, rgba(9, 9, 11, .66) 0%, rgba(9, 9, 11, .5) 60%, rgba(9, 9, 11, .34) 100%), linear-gradient(0deg, #09090b 0%, transparent 26%); }
   .s { padding-top: 84px; }
   .tour-sec { padding: 84px 0 90px; }
   .music-sec { padding-bottom: 90px; }
+  .about-sec { padding-bottom: 84px; }
   .video-sec { padding: 84px 0 90px; }
 }
 @media (prefers-reduced-motion: reduce) {

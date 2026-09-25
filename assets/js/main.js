@@ -122,35 +122,68 @@
     .filter(function (g) { return g && g.title && g.date >= today && realDate(g.date); })
     .sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
 
+  // Per jaar een kaart; lange jaren tonen eerst een paar data en klappen de rest uit.
+  // Hoeveel er dicht zichtbaar zijn regelt style.css: 3 op een telefoon, 5 vanaf 720 px.
+  var SHOW_PHONE = 3, SHOW_WIDE = 5;
   if (list && gigs.length) {
-    var year = null;
+    var years = [];
     gigs.forEach(function (g) {
-      var d = realDate(g.date);
-      if (d.getFullYear() !== year) {
-        year = d.getFullYear();
-        list.append(el("h3", "tour-year", String(year)));
+      var y = realDate(g.date).getFullYear();
+      if (!years.length || years[years.length - 1].year !== y) years.push({ year: y, gigs: [] });
+      years[years.length - 1].gigs.push(g);
+    });
+    years.forEach(function (y) {
+      var card = el("article", "year-card");
+      var head = el("div", "year-head");
+      head.append(el("h3", "tour-year", String(y.year)), el("span", "year-count", y.gigs.length + (y.gigs.length === 1 ? " datum" : " data")));
+
+      var ul = el("ul", "year-list");
+      ul.id = "tour-" + y.year;
+      y.gigs.forEach(function (g) {
+        var d = realDate(g.date);
+        var li = el("li", "gig");
+
+        var date = el("div", "gig-date");
+        date.append(el("div", "num", String(d.getDate())), el("span", "chip", DAYS[d.getDay()] + " " + MONTHS[d.getMonth()]));
+
+        var info = el("div", "gig-info");
+        info.append(el("h4", "", g.title));
+        var where = [g.venue, g.city].filter(Boolean).join(" · ");
+        if (where) info.append(el("p", "", where));
+        if (g.option) info.append(el("span", "option-badge", "Optie"));
+        var url = safeUrl(g.url);
+        if (url) {
+          var a = el("a", "more-info");
+          a.href = url;
+          a.rel = "noopener";
+          a.append(el("span", "", "Meer info"), el("span", "", " →"));
+          info.append(a);
+        }
+        li.append(date, info);
+        ul.append(li);
+      });
+      card.append(head, ul);
+
+      if (y.gigs.length > SHOW_PHONE) {
+        // 4 of 5 data passen op een breed scherm al helemaal: daar geen knop
+        if (y.gigs.length <= SHOW_WIDE) card.classList.add("fits-wide");
+        var more = el("button", "year-more");
+        var label = el("span", "", "");
+        var arrow = el("span", "", "");
+        more.type = "button";
+        more.setAttribute("aria-controls", ul.id);
+        more.append(label, arrow);
+        var setOpen = function (open) {
+          card.classList.toggle("open", open);
+          more.setAttribute("aria-expanded", String(open));
+          label.textContent = open ? "Minder tonen" : "Toon alle " + y.gigs.length + " data";
+          arrow.textContent = open ? "↑" : "↓";
+        };
+        setOpen(false);
+        more.addEventListener("click", function () { setOpen(!card.classList.contains("open")); });
+        card.append(more);
       }
-      var li = el("article", "gig");
-
-      var top = el("div", "top");
-      top.append(el("div", "num", String(d.getDate())), el("span", "chip", DAYS[d.getDay()] + " · " + MONTHS[d.getMonth()]));
-
-      var info = el("div");
-      info.append(el("h3", "", g.title));
-      if (g.option) info.append(el("span", "option-badge", "Optie"));
-      var where = [g.venue, g.city].filter(Boolean).join(" · ");
-      if (where) info.append(el("p", "", where));
-
-      li.append(top, info);
-      var url = safeUrl(g.url);
-      if (url) {
-        var a = el("a", "more-info");
-        a.href = url;
-        a.rel = "noopener";
-        a.append(el("span", "", "Meer info"), el("span", "", "→"));
-        li.append(a);
-      }
-      list.append(li);
+      list.append(card);
     });
     list.hidden = false;
     empty.hidden = true;

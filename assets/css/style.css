@@ -245,6 +245,7 @@ a.cd, .cd { position: relative; display: block; width: 100%; max-width: 300px; a
 .contact p { font-weight: 700; font-size: 1.1rem; line-height: 1.7; color: var(--ink); overflow-wrap: anywhere; }
 .contact a { text-decoration-thickness: 1px; text-underline-offset: 3px; }
 .contact a:hover { color: var(--red); }
+.contact .presskit { margin-top: 10px; }
 .contact .demo, .contact .nr1 { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
 .contact .demo img { width: 72px; height: 72px; flex: none; }
 .contact .nr1 img { width: 84px; height: auto; flex: none; }

@@ -79,6 +79,8 @@ for (const w of [1440, 900, 390, 320]) {
     return out;
   });
   check(clipped.length === 0, `geen tekst buiten de kaart bij ${w}px`, clipped.join(", "));
+  const logo = await page.evaluate(() => { const l = document.querySelector(".site-logo").getBoundingClientRect(), n = document.querySelector(".nav").getBoundingClientRect(); return { gap: n.left - l.right, right: document.documentElement.clientWidth - n.right }; });
+  check(logo.gap >= 4 && logo.right >= 4, `logo linksboven valt niet over het menu bij ${w}px`, JSON.stringify(logo));
   await ctx.close();
 }
 

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tour C · Jaarkaarten</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* C. Jaarkaarten: per jaar een kaart met een verloopkop, grote datumcijfers zoals nu maar klein, max. 5 data zichtbaar */
+.mock-label { background: #111; color: #fff; font: 700 .8rem/1 var(--display); letter-spacing: .12em; text-transform: uppercase; padding: 14px 20px; }
+.jk { margin-top: 48px; display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); align-items: start; }
+.jk-card { background: #fff; border-radius: 22px; box-shadow: var(--shadow); overflow: hidden; }
+.jk-head { background: var(--grad); color: #fff; padding: 18px 20px 16px; display: flex; justify-content: space-between; align-items: flex-end; }
+.jk-head h3 { color: #fff; font: 800 2.3rem/.9 var(--display); letter-spacing: -.05em; }
+.jk-head span { font: 700 .66rem/1 var(--display); letter-spacing: .12em; text-transform: uppercase; opacity: .85; }
+.jk-list { list-style: none; margin: 0; padding: 6px 18px; }
+.jk-row { display: flex; gap: 14px; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+.jk-row:last-child { border-bottom: 0; }
+.jk-card:not(.open) .jk-row:nth-child(n+6) { display: none; }
+.jk-num { flex: none; width: 52px; text-align: center; }
+.jk-num b { display: block; font: 800 1.9rem/.9 var(--display); letter-spacing: -.06em; background: linear-gradient(120deg, #d0141f, #e8480f); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.jk-num span { display: inline-block; margin-top: 5px; padding: 3px 6px; white-space: nowrap; border-radius: 999px; background: #f0f0f0; font: 700 .58rem/1 var(--display); letter-spacing: .1em; text-transform: uppercase; color: #444; }
+.jk-info { min-width: 0; }
+.jk-info strong { display: block; font: 800 .8rem/1.25 var(--display); text-transform: uppercase; color: var(--ink); overflow-wrap: break-word; hyphens: auto; }
+.jk-info a { text-decoration: none; }
+.jk-info a:hover strong { color: var(--red); }
+.jk-info p { font-size: .8rem; line-height: 1.3; color: var(--mute); margin-top: 2px; }
+.jk-opt { display: inline-block; margin-top: 4px; padding: 3px 8px; border-radius: 999px; background: rgba(242, 138, 10, .14); border: 1px solid rgba(242, 138, 10, .5); color: #a35c00; font: 800 .56rem/1 var(--display); letter-spacing: .1em; text-transform: uppercase; }
+.jk-more { display: flex; width: 100%; justify-content: space-between; padding: 14px 20px; border: 0; border-top: 1px solid #eee; background: #fafafa; font: 700 .72rem/1 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--ink); cursor: pointer; }
+.jk-more:hover { color: var(--red); }
+</style>
+</head>
+<body>
+<div class="mock-label">Ontwerp C · Jaarkaarten — huidige stijl in het klein, max. 5 data per jaar, rest uitklappen</div>
+<section class="s tour-sec" id="tour">
+  <div class="wrap">
+    <p class="eyebrow">Live</p>
+    <h2>Tour</h2>
+    <div class="jk" id="jk"></div>
+  </div>
+</section>
+<script src="../assets/js/gigs.js"></script>
+<script src="tour-data.js"></script>
+<script>
+(function () {
+  var el = TOUR.el, root = document.getElementById("jk"), SHOW = 5;
+  TOUR.years.forEach(function (y) {
+    var card = el("article", "jk-card");
+    var head = el("div", "jk-head");
+    head.append(el("h3", "", String(y.year)), el("span", "", y.gigs.length + (y.gigs.length === 1 ? " datum" : " data")));
+    var ul = el("ul", "jk-list");
+    y.gigs.forEach(function (g) {
+      var li = el("li", "jk-row");
+      var num = el("div", "jk-num");
+      num.append(el("b", "", String(g.d.getDate())), el("span", "", g.day + " " + g.month));
+      var info = el("div", "jk-info");
+      var t = el("strong", "", g.title);
+      if (g.url) { var a = el("a"); a.href = g.url; a.rel = "noopener"; a.append(t); info.append(a); } else info.append(t);
+      if (g.where) info.append(el("p", "", g.where));
+      if (g.option) info.append(el("span", "jk-opt", "Optie"));
+      li.append(num, info);
+      ul.append(li);
+    });
+    card.append(head, ul);
+    if (y.gigs.length > SHOW) {
+      var more = el("button", "jk-more");
+      more.type = "button";
+      more.setAttribute("aria-expanded", "false");
+      var label = el("span", "", "Toon alle " + y.gigs.length + " data");
+      more.append(label, el("span", "", "↓"));
+      more.addEventListener("click", function () {
+        var open = card.classList.toggle("open");
+        more.setAttribute("aria-expanded", String(open));
+        label.textContent = open ? "Minder tonen" : "Toon alle " + y.gigs.length + " data";
+        more.lastChild.textContent = open ? "↑" : "↓";
+      });
+      card.append(more);
+    }
+    root.append(card);
+  });
+})();
+</script>
+</body>
+</html>

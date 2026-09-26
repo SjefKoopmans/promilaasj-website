@@ -50,7 +50,7 @@ async function open(viewport, gigsOverride) {
 {
   const { ctx, page, problems } = await open({ width: 1440, height: 900 });
   const ids = await page.$$eval("main > section", (s) => s.map((e) => e.id));
-  check(JSON.stringify(ids) === JSON.stringify(["top", "tour", "muziek", "video", "boeken"]), "secties in de afgesproken volgorde", ids.join(", "));
+  check(JSON.stringify(ids) === JSON.stringify(["top", "over-ons", "tour", "muziek", "video", "boeken"]), "secties in de afgesproken volgorde", ids.join(", "));
   check((await page.textContent("h1")).replace(/\s+/g, " ").trim() === "Zin in Dich", "h1 is 'Zin in Dich'");
   check((await page.locator("text=Opgelet!").count()) > 0, "OPGELET-aankondiging staat bovenaan");
 
@@ -71,7 +71,7 @@ for (const w of [1440, 900, 390, 320]) {
   // niets mag buiten zijn eigen kaart of sectie steken (bijv. een afgeknipte kop)
   const clipped = await page.evaluate(() => {
     const out = [];
-    document.querySelectorAll(".book h2, .book .book-lede, .contact p, .gig h3, .rel h3, .lp h1 .line").forEach((el) => {
+    document.querySelectorAll(".book h2, .book .book-lede, .contact p, .gig h4, .rel h3, .lp h1 .line").forEach((el) => {
       const range = document.createRange(); range.selectNodeContents(el);
       const r = range.getBoundingClientRect(); const box = el.closest(".book, .contact > div, .gig, .rel, .lp-copy");
       if (box && r.right > box.getBoundingClientRect().right + 1) out.push(el.className || el.tagName);
@@ -79,6 +79,8 @@ for (const w of [1440, 900, 390, 320]) {
     return out;
   });
   check(clipped.length === 0, `geen tekst buiten de kaart bij ${w}px`, clipped.join(", "));
+  const logo = await page.evaluate(() => { const l = document.querySelector(".site-logo").getBoundingClientRect(), n = document.querySelector(".nav").getBoundingClientRect(); return { gap: n.left - l.right, right: document.documentElement.clientWidth - n.right }; });
+  check(logo.gap >= 4 && logo.right >= 4, `logo linksboven valt niet over het menu bij ${w}px`, JSON.stringify(logo));
   await ctx.close();
 }
 
@@ -92,7 +94,7 @@ for (const w of [1440, 900, 390, 320]) {
     {date:"2999-03-04",title:"Javascript-link",url:"javascript:alert(1)"},
     {date:"3000-01-05",title:"Nieuw jaar optie",option:true}];`;
   const { ctx, page } = await open({ width: 1200, height: 800 }, data);
-  const titles = await page.$$eval("#gigs .gig h3", (n) => n.map((e) => e.textContent));
+  const titles = await page.$$eval("#gigs .gig h4", (n) => n.map((e) => e.textContent));
   check(JSON.stringify(titles) === JSON.stringify(["Vastelaovend", "Javascript-link", "11e van de 11e <b>x</b>", "Nieuw jaar optie"]), "agenda: gesorteerd, verleden en onmogelijke datums weg", JSON.stringify(titles));
   const links = await page.$$eval("#gigs a", (n) => n.map((e) => e.href));
   check(JSON.stringify(links) === JSON.stringify(["https://example.com/kaarten"]), "agenda: alleen echte https-links (plaatshouder '…' en javascript: genegeerd)", JSON.stringify(links));
@@ -101,9 +103,24 @@ for (const w of [1440, 900, 390, 320]) {
   check(await page.isHidden("#gigs-empty"), "agenda: lege melding verborgen zodra er optredens zijn");
   const years = await page.$$eval("#gigs .tour-year", (n) => n.map((e) => e.textContent));
   check(JSON.stringify(years) === JSON.stringify(["2999", "3000"]), "agenda: een jaarkop per jaar, in volgorde", JSON.stringify(years));
-  const optionTitles = await page.$$eval("#gigs .gig", (n) => n.filter((e) => e.querySelector(".option-badge")).map((e) => e.querySelector("h3").textContent));
+  const optionTitles = await page.$$eval("#gigs .gig", (n) => n.filter((e) => e.querySelector(".option-badge")).map((e) => e.querySelector("h4").textContent));
   check(JSON.stringify(optionTitles) === JSON.stringify(["Nieuw jaar optie"]), "agenda: 'Optie'-label alleen bij option:true", JSON.stringify(optionTitles));
   await ctx.close();
+
+  const many = await open({ width: 390, height: 800 }, "window.GIGS=[" + [1, 2, 3, 4, 5, 6, 7].map((d) => `{date:"2999-01-0${d}",title:"Optreden ${d}"}`).join(",") + "];");
+  const visible = () => many.page.$$eval("#gigs .gig", (n) => n.filter((e) => e.offsetParent).length);
+  check((await visible()) === 3, "agenda: telefoon toont eerst 3 data per jaar", String(await visible()));
+  await many.page.setViewportSize({ width: 1200, height: 800 });
+  check((await visible()) === 5, "agenda: laptop toont eerst 5 data per jaar", String(await visible()));
+  await many.page.click("#gigs .year-more");
+  check((await visible()) === 7 && (await many.page.getAttribute("#gigs .year-more", "aria-expanded")) === "true", "agenda: 'Toon alle' klapt de rest van het jaar uit");
+  await many.ctx.close();
+
+  const five = await open({ width: 1200, height: 800 }, "window.GIGS=[" + [1, 2, 3, 4].map((d) => `{date:"2999-01-0${d}",title:"Optreden ${d}"}`).join(",") + "];");
+  check(await five.page.isHidden("#gigs .year-more"), "agenda: laptop: geen 'Toon alle' als alle data al passen");
+  await five.page.setViewportSize({ width: 390, height: 800 });
+  check(await five.page.isVisible("#gigs .year-more"), "agenda: telefoon: wel 'Toon alle' bij 4 data");
+  await five.ctx.close();
 
   const none = await open({ width: 1200, height: 800 }, "window.GIGS=[];");
   check(await none.page.isVisible("#gigs-empty"), "agenda: nette melding zonder optredens");

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tour A · Kolommen</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* A. Kolommen: één witte kaart, per jaar een kolom met dunne scheidingslijnen, elke datum één compacte regel */
+.mock-label { background: #111; color: #fff; font: 700 .8rem/1 var(--display); letter-spacing: .12em; text-transform: uppercase; padding: 14px 20px; }
+.yc { margin-top: 48px; background: #fff; border-radius: 26px; box-shadow: var(--shadow); display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); overflow: hidden; }
+.yc-col { padding: 26px 18px 22px; border-left: 1px solid #eee; min-width: 0; }
+.yc-col:first-child { border-left: 0; }
+.yc-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding-bottom: 14px; margin-bottom: 6px; border-bottom: 3px solid transparent; border-image: var(--grad) 1; }
+.yc-year { font: 800 2.1rem/1 var(--display); letter-spacing: -.04em; background: linear-gradient(120deg, #d0141f, #e8480f); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.yc-count { font: 700 .68rem/1 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--mute); white-space: nowrap; }
+.yc-list { list-style: none; margin: 0; padding: 0; }
+.yc-row { display: grid; grid-template-columns: 44px 1fr; gap: 12px; padding: 11px 0; border-bottom: 1px solid #f1f1f1; }
+.yc-row:last-child { border-bottom: 0; }
+.yc-date { text-align: center; }
+.yc-date b { display: block; font: 800 1.35rem/1 var(--display); letter-spacing: -.03em; color: var(--ink); }
+.yc-date span { display: block; margin-top: 4px; font: 700 .56rem/1.25 var(--display); letter-spacing: .06em; text-transform: uppercase; color: var(--mute); }
+.yc-info { min-width: 0; }
+.yc-info strong { display: block; font: 800 .78rem/1.25 var(--display); text-transform: uppercase; color: var(--ink); overflow-wrap: break-word; hyphens: auto; }
+.yc-info a { text-decoration: none; }
+.yc-info a:hover strong { color: var(--red); }
+.yc-info p { font-size: .82rem; line-height: 1.35; color: var(--mute); margin-top: 2px; }
+.yc-opt { display: inline-block; margin-left: 4px; padding: 2px 7px; border-radius: 999px; background: rgba(242, 138, 10, .14); color: #a35c00; font: 800 .56rem/1.4 var(--display); letter-spacing: .08em; vertical-align: 1px; }
+/* Telefoon: de jaren schuiven naast elkaar, vegen naar het volgende jaar */
+@media (max-width: 719px) {
+  /* elk jaar een eigen kaart, zodat een kort jaar niet zo lang wordt als het langste */
+  .yc { grid-auto-columns: 84%; gap: 12px; align-items: start; background: none; box-shadow: none; border-radius: 0; margin-left: -20px; margin-right: -20px; padding: 0 20px 24px; scroll-padding: 0 20px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .yc::-webkit-scrollbar { display: none; }
+  .yc-col { scroll-snap-align: start; background: #fff; border: 0; border-radius: 22px; box-shadow: var(--shadow); }
+  .yc-hint { display: block; margin-top: 14px; font-size: .85rem; color: var(--mute); }
+}
+@media (min-width: 720px) { .yc-hint { display: none; } }
+</style>
+</head>
+<body>
+<div class="mock-label">Ontwerp A · Kolommen — alle data zichtbaar, één regel per optreden</div>
+<section class="s tour-sec" id="tour">
+  <div class="wrap">
+    <p class="eyebrow">Live</p>
+    <h2>Tour</h2>
+    <div class="yc" id="yc"></div>
+    <p class="yc-hint">Veeg voor het volgende jaar →</p>
+  </div>
+</section>
+<script src="../assets/js/gigs.js"></script>
+<script src="tour-data.js"></script>
+<script>
+(function () {
+  var el = TOUR.el, root = document.getElementById("yc");
+  TOUR.years.forEach(function (y) {
+    var col = el("div", "yc-col");
+    var head = el("div", "yc-head");
+    head.append(el("h3", "yc-year", String(y.year)), el("span", "yc-count", y.gigs.length + (y.gigs.length === 1 ? " optreden" : " optredens")));
+    var ul = el("ul", "yc-list");
+    y.gigs.forEach(function (g) {
+      var li = el("li", "yc-row");
+      var date = el("div", "yc-date");
+      var sub = el("span", "", g.day);
+      sub.append(document.createElement("br"), g.month);
+      date.append(el("b", "", String(g.d.getDate())), sub);
+      var info = el("div", "yc-info");
+      var t = el("strong", "", g.title);
+      if (g.option) t.append(el("span", "yc-opt", "OPTIE"));
+      if (g.url) { var a = el("a"); a.href = g.url; a.rel = "noopener"; a.append(t); info.append(a); } else info.append(t);
+      if (g.where) info.append(el("p", "", g.where));
+      li.append(date, info);
+      ul.append(li);
+    });
+    col.append(head, ul);
+    root.append(col);
+  });
+})();
+</script>
+</body>
+</html>

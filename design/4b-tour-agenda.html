@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tour B · Agenda</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* B. Agenda: geen kaarten, kolommen direct op het grijs, per maand gegroepeerd, elk optreden één regel tekst */
+.mock-label { background: #111; color: #fff; font: 700 .8rem/1 var(--display); letter-spacing: .12em; text-transform: uppercase; padding: 14px 20px; }
+.ag-tabs { display: none; }
+.ag { margin-top: 44px; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 36px; }
+.ag-col { min-width: 0; }
+.ag-year { font: 800 3rem/1 var(--display); letter-spacing: -.05em; color: var(--ink); padding-bottom: 12px; border-bottom: 2px solid var(--ink); }
+.ag-month { margin: 18px 0 4px; font: 700 .68rem/1 var(--display); letter-spacing: .18em; text-transform: uppercase; color: var(--red); }
+.ag-list { list-style: none; margin: 0; padding: 0; }
+.ag-row { display: grid; grid-template-columns: 50px 1fr; gap: 8px; align-items: baseline; padding: 6px 0; border-bottom: 1px dashed #d4d4d4; font-size: .9rem; line-height: 1.3; }
+.ag-row time { font: 800 .82rem/1 var(--display); color: var(--ink); white-space: nowrap; }
+.ag-row time small { font: 700 .62rem/1 var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--mute); margin-right: 4px; }
+.ag-what { min-width: 0; color: #333; }
+.ag-what b { font-weight: 700; color: var(--ink); }
+.ag-what a { text-decoration: none; }
+.ag-what a:hover b { color: var(--red); text-decoration: underline; }
+.ag-what span { color: var(--mute); }
+.ag-what .opt { color: #a35c00; font: 800 .6rem/1 var(--display); letter-spacing: .08em; text-transform: uppercase; margin-left: 4px; }
+/* Telefoon: jaartabs, één kolom tegelijk */
+@media (max-width: 719px) {
+  .ag-tabs { display: flex; gap: 8px; margin-top: 32px; overflow-x: auto; scrollbar-width: none; }
+  .ag-tabs button { flex: none; padding: 10px 16px; border-radius: 999px; border: 1px solid #cfcfcf; background: transparent; font: 800 .85rem/1 var(--display); color: var(--ink); cursor: pointer; }
+  .ag-tabs button[aria-selected="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .ag { display: block; margin-top: 20px; }
+  .ag-col:not(.on) { display: none; }
+  .ag-year { display: none; }
+  .ag-col > .ag-month:first-of-type { margin-top: 8px; }
+}
+</style>
+</head>
+<body>
+<div class="mock-label">Ontwerp B · Agenda — kolommen zonder kaarten, per maand, op telefoon jaartabs</div>
+<section class="s tour-sec" id="tour">
+  <div class="wrap">
+    <p class="eyebrow">Live</p>
+    <h2>Tour</h2>
+    <div class="ag-tabs" role="tablist" id="ag-tabs"></div>
+    <div class="ag" id="ag"></div>
+  </div>
+</section>
+<script src="../assets/js/gigs.js"></script>
+<script src="tour-data.js"></script>
+<script>
+(function () {
+  var el = TOUR.el, root = document.getElementById("ag"), tabs = document.getElementById("ag-tabs");
+  var cols = [], btns = [];
+  function select(i) {
+    cols.forEach(function (c, j) { c.classList.toggle("on", i === j); });
+    btns.forEach(function (b, j) { b.setAttribute("aria-selected", String(i === j)); });
+  }
+  TOUR.years.forEach(function (y, i) {
+    var col = el("div", "ag-col");
+    col.append(el("h3", "ag-year", String(y.year)));
+    var month = null, ul;
+    y.gigs.forEach(function (g) {
+      if (g.monthLong !== month) {
+        month = g.monthLong;
+        col.append(el("p", "ag-month", month));
+        ul = el("ul", "ag-list");
+        col.append(ul);
+      }
+      var li = el("li", "ag-row");
+      var t = el("time");
+      t.append(el("small", "", g.day), String(g.d.getDate()));
+      var what = el("div", "ag-what");
+      var b = el("b", "", g.title);
+      if (g.url) { var a = el("a"); a.href = g.url; a.rel = "noopener"; a.append(b); what.append(a); } else what.append(b);
+      if (g.city) what.append(el("span", "", " · " + g.city));
+      if (g.option) what.append(el("span", "opt", "optie"));
+      li.append(t, what);
+      ul.append(li);
+    });
+    root.append(col);
+    cols.push(col);
+    var btn = el("button", "", String(y.year));
+    btn.type = "button";
+    btn.setAttribute("role", "tab");
+    btn.addEventListener("click", function () { select(i); });
+    tabs.append(btn);
+    btns.push(btn);
+  });
+  select(0);
+})();
+</script>
+</body>
+</html>

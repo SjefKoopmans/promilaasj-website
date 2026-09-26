@@ -1,3 +1,6 @@
 .DS_Store
 Thumbs.db
 node_modules/
+
+# Losse presskit-bestanden: staan al in "assets/img/presskit 2026.zip" (uitpakken om ze te gebruiken)
+assets/img/presskit 2026/

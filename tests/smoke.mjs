@@ -322,6 +322,32 @@ for (const [w, h] of [[1440, 900], [1024, 768], [390, 844]]) {
   await reduced.close();
 }
 
+// Bezoekersteller: paginabezoek en de afgesproken klikken komen als gebeurtenis bij GoatCounter aan
+{
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const page = await ctx.newPage();
+  const hits = [];
+  await ctx.addInitScript(() => { window.goatcounter = { allow_local: true }; });
+  await ctx.route("https://promilaasj.goatcounter.com/**", (r) => {
+    const q = new URL(r.request().url()).searchParams;
+    hits.push({ p: q.get("p"), e: q.get("e") === "true" });
+    r.fulfill({ status: 200, body: "" });
+  });
+  await page.goto(BASE, { waitUntil: "load" });
+  // links wel laten tellen, maar niet wegnavigeren of downloaden
+  await page.evaluate(() => document.addEventListener("click", (e) => { if (e.target.closest("a")) e.preventDefault(); }, true));
+  for (const sel of ['#menu a[href="#muziek"]', ".nav-cta", '[data-goatcounter-click="menu-spotify"]', 'a[href*="album/5Ei0aolHJayZut6REOKIDT"]', ".presskit a", 'a[href*="nr1artiesten.nl"]']) await page.click(sel);
+  await page.click('[data-spotify="6xRbgZhhXKRBSHjcLOuNRW"] .cd');
+  await page.click("#feat-btn");
+  await page.click('#playlist [data-yt="NfcCfGOxz0o"]');
+  await page.waitForTimeout(300);
+  const events = hits.filter((h) => h.e).map((h) => h.p);
+  check(hits.some((h) => !h.e && h.p === "/"), "teller: paginabezoek wordt geteld", JSON.stringify(hits));
+  const want = ["menu-muziek", "menu-boek-ons", "menu-spotify", "muziek-neet-allein", "presskit-download", "nr1-artiesten", "muziek-limburgs-maedje", "video-promo-promilaasj-2026", "video-vastelaoves-tour-2020"];
+  check(JSON.stringify(events) === JSON.stringify(want), "teller: menu, muziek, video, presskit en Nr. 1 Artiesten worden geteld", events.join(", "));
+  await ctx.close();
+}
+
 await browser.close();
 server.close();
 console.log(failures ? `\n${failures} test(s) mislukt` : "\nAlles OK");

@@ -1,6 +1,16 @@
 (function () {
   "use strict";
 
+  // ---------- Bezoekersteller: telt afspelen van muziek en video als gebeurtenis in GoatCounter ----------
+  // Klikken op gewone links telt count.js zelf, via data-goatcounter-click in index.html.
+  function slug(t) {
+    return String(t).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  }
+  function track(kind, title) {
+    var gc = window.goatcounter;
+    if (gc && gc.count) gc.count({ path: kind + "-" + slug(title), title: kind.charAt(0).toUpperCase() + kind.slice(1) + ": " + title, event: true });
+  }
+
   // ---------- Mobiel menu ----------
   var toggle = document.querySelector(".nav-toggle");
   var menu = document.getElementById("menu");
@@ -37,6 +47,7 @@
       var play = card.querySelector(".play");
       if (play) play.hidden = true;
       frame.focus();
+      track("muziek", card.getAttribute("data-title") || id);
     }
     card.querySelectorAll(".cd, .play").forEach(function (el) {
       el.addEventListener("click", load);
@@ -74,6 +85,7 @@
       feat.classList.add("playing");
     }
     featTitle.textContent = title;
+    track("video", title);
   }
   if (feat && featBtn && items.length) {
     featBtn.addEventListener("click", function () { play(current); });

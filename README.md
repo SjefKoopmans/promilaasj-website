@@ -1,6 +1,6 @@
 # Promilaasj website
 
-One-page Dutch site for the band Promilaasj, built on design 1C. Plain HTML, CSS and a little JavaScript: no framework and no build step. Fonts are hosted with the site, there are no cookies, and Spotify and YouTube only load after a visitor clicks play.
+One-page Dutch site for the band Promilaasj, built on design 1C. Plain HTML, CSS and a little JavaScript: no framework and no build step. Fonts are hosted with the site, there are no cookies (the GoatCounter visitor counter doesn't use them), and Spotify and YouTube only load after a visitor clicks play.
 
 Sections, in order: OPGELET (new single Zin in Dich) → Tour → Muziek → Video → Boeken and contact.
 
@@ -28,6 +28,7 @@ Upload the whole folder to any static host with `index.html` at the root. The sh
 | Add or change a video | Copy a `<li>` in the playlist in `index.html` (YouTube id and title) and add a thumbnail as `assets/img/video-<id>.jpg`. |
 | Which links open in a new tab | `assets/js/main.js`, search for `laptop`. Now: external links, on screens from 980 px wide with a mouse. |
 | Booking and contact details | The `#boeken` section of `index.html`. |
+| Visitor counter | GoatCounter, dashboard at https://promilaasj.goatcounter.com. The script is self-hosted as `assets/js/count.js`; the site code `promilaasj` appears in the `<script data-goatcounter>` tag and in the Content-Security-Policy in `index.html`. Link clicks are counted with `data-goatcounter-click="<name>"` on the link; playing music and video is counted in `assets/js/main.js` (search for `track`). Events: `menu-*`, `muziek-*`, `video-*`, `presskit-download`, `nr1-artiesten`. |
 
 ## Tests
 

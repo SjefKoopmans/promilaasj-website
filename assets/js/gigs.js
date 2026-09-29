@@ -28,7 +28,7 @@ window.GIGS = [
 	{ date: "2027-02-09", title: "Carnaval", venue: "MARKT EYGELSHOVEN", city: "Eygelshoven" },
 	{ date: "2027-03-06", title: "Halfvasten", venue: "Afferden", city: "Afferden", option: true },
 	{ date: "2027-07-18", title: "ZLF 2027", venue: "Feestweide ZLF 2027", city: "Oirsbeek" },
-	{ date: "2027-10-16", title: "50 jarig jubileum dansgroep Banholt", venue: "Banholt", city: "Banholt", option: true },
+	{ date: "2027-10-16", title: "50 jarig jubileum dansgroep Banholt", venue: "HARMONIEZAAL BANHOLT", city: "Banholt", option: true },
 	{ date: "2028-01-21", title: "Besloten feest" },
 	{ date: "2028-02-26", title: "Besloten feest" },
 	{ date: "2028-02-26", title: "DON BOSCO", venue: "DON BOSCO", city: "Heel" },

@@ -124,8 +124,8 @@ h3 { font: 800 1.4rem/1.15 var(--display); text-transform: uppercase; letter-spa
 /* Bandnaam (presskit 2026, "Bandnaam 1") in het midden, net onder het zwevende menu */
 .lp-brand { position: absolute; top: 96px; left: 50%; transform: translateX(-50%); width: clamp(240px, 42vw, 560px); height: auto; filter: drop-shadow(0 4px 18px rgba(0, 0, 0, .45)); }
 .lp-wrap { display: grid; gap: 48px; align-items: center; width: 100%; }
-.alertchip { display: inline-flex; align-items: center; gap: 10px; padding: 10px 18px; border-radius: 999px; background: rgba(255, 45, 61, .14); border: 1px solid rgba(255, 45, 61, .55); font: 800 .8rem/1 var(--display); letter-spacing: .2em; text-transform: uppercase; color: #ff6a73; }
-.alertchip i { width: 9px; height: 9px; border-radius: 50%; background: #ff2d3d; box-shadow: 0 0 0 0 rgba(255, 45, 61, .7); animation: pulse 1.8s infinite; }
+.alertchip { display: inline-flex; align-items: center; gap: 14px; padding: 14px 28px; border-radius: 999px; background: rgba(255, 45, 61, .14); border: 1px solid rgba(255, 45, 61, .55); font: 800 clamp(1.05rem, 2.2vw, 1.35rem)/1 var(--display); letter-spacing: .2em; text-transform: uppercase; color: #ff6a73; }
+.alertchip i { width: 13px; height: 13px; border-radius: 50%; background: #ff2d3d; box-shadow: 0 0 0 0 rgba(255, 45, 61, .7); animation: pulse 1.8s infinite; }
 @keyframes pulse { 70% { box-shadow: 0 0 0 12px rgba(255, 45, 61, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 45, 61, 0); } }
 .lp h1 { font: 800 clamp(3.4rem, 12vw, 7.75rem)/.92 var(--display); letter-spacing: -.045em; margin-top: 24px; text-transform: uppercase; color: #fff; }
 .lp h1 .line { display: block; }
@@ -136,16 +136,13 @@ h3 { font: 800 1.4rem/1.15 var(--display); text-transform: uppercase; letter-spa
 .lede a:hover, .meta a:hover { color: #ff9f0a; }
 .act { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 .glass { margin: 0; background: rgba(24, 24, 28, .6); -webkit-backdrop-filter: blur(22px); backdrop-filter: blur(22px); border: 1px solid rgba(255, 255, 255, .14); border-radius: 28px; padding: 18px; }
-.single { max-width: 340px; transform: rotate(2.5deg); }
+/* Kanteling van de Spotify-kaart: zo schuin als past zonder dat een hoek van het scherm valt.
+   Telefoon (vanaf 320 px) max 4.5°, tablet 6.5°, vanaf 1240 px de gewenste 10°. */
+.single { width: 100%; max-width: 420px; transform: rotate(4.5deg); }
+.sp-embed { display: block; width: 100%; height: 352px; border: 0; border-radius: 12px; }
 .cover { aspect-ratio: 1; border-radius: 18px; position: relative; display: grid; place-items: center; text-align: center; padding: 20px; font: 800 2.25rem/.98 var(--display); letter-spacing: -.03em; text-transform: uppercase; color: #fff; background: radial-gradient(120% 90% at 20% 10%, #ff9f0a, transparent 55%), radial-gradient(90% 80% at 90% 100%, #ff2d3d, transparent 60%), #1a0a0a; }
 .cover small { position: absolute; left: 14px; bottom: 12px; font: 700 .7rem/1 var(--display); letter-spacing: .14em; text-transform: uppercase; opacity: .85; }
-img.cover, video.cover { width: 100%; object-fit: cover; padding: 0; }
-/* Teaser is staand 576×1040: toon het hele beeld, niet bijgesneden tot een vierkant */
-video.cover { aspect-ratio: 576 / 1040; background: #000; }
-.cover-frame { position: relative; }
-.mute-toggle { position: absolute; right: 14px; bottom: 14px; width: 40px; height: 40px; font-size: 20px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .35); background: rgba(9, 9, 11, .55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); display: grid; place-items: center; color: #fff; cursor: pointer; transition: transform .15s, background .15s; }
-.mute-toggle:hover { background: rgba(9, 9, 11, .8); transform: scale(1.08); }
-.meta { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 16px 6px 4px; }
+img.cover, .meta { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 16px 6px 4px; }
 .meta b { display: block; font: 800 1rem/1.2 var(--display); }
 .meta span { color: #b4b4bc; font-size: .875rem; }
 .meta .badge { padding: 8px 14px; border-radius: 999px; background: #fff; color: #111; font: 800 .7rem/1 var(--display); letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
@@ -271,7 +268,10 @@ a.cd, .cd { position: relative; display: block; width: 100%; max-width: 300px; a
   .book { padding: 56px 48px; grid-template-columns: 1.1fr 1fr; gap: 48px; }
   .s { padding-top: 130px; }
   .lp-wrap { grid-template-columns: 1.25fr .75fr; gap: 56px; }
-  .single { max-width: 350px; justify-self: center; }
+  .single { max-width: 420px; justify-self: center; transform: rotate(6.5deg); }
+}
+@media (min-width: 1240px) {
+  .single { transform: rotate(10deg); }
 }
 @media (min-width: 1000px) {
   .contact { grid-template-columns: 1.2fr 1fr 1.2fr; }

@@ -159,7 +159,7 @@ for (const w of [1440, 900, 390, 320]) {
 {
   const { ctx, page } = await open({ width: 1440, height: 900 });
   const releases = await page.$$eval("[data-spotify]", (n) => n.map((e) => ({ id: e.getAttribute("data-spotify"), title: e.getAttribute("data-title") })));
-  check((await page.locator("iframe").count()) === 0, "Spotify: nog niets geladen voor de klik");
+  check((await page.locator("#muziek iframe").count()) === 0, "Spotify: nog niets geladen voor de klik");
   for (const r of releases) {
     await page.click(`[data-spotify="${r.id}"] .cd`);
     const sp = await page.getAttribute(`[data-spotify="${r.id}"] iframe`, "src");
@@ -287,39 +287,13 @@ for (const [w, h] of [[1440, 900], [1024, 768], [390, 844]]) {
   await ctx.close();
 }
 
-// 9. Teaservideo: probeert met geluid, valt terug op gedempt, met een knop om het geluid te wisselen; niet automatisch bij 'minder beweging'
+// 9. Spotify-speler voor 'Zin in Dich' in de kaart op de voorpagina
 {
   const { ctx, page } = await open({ width: 1440, height: 900 });
-  await page.waitForFunction(() => (document.querySelector("video.cover") || {}).readyState >= 1, null, { timeout: 8000 }).catch(() => {});
-  await page.waitForTimeout(200); // laat de eventuele mislukte 'met geluid'-poging terugvallen op gedempt
-  const v = await page.evaluate(() => {
-    const el = document.querySelector("video.cover");
-    return el && { muted: el.muted, loop: el.loop, hasPoster: !!el.getAttribute("poster"), w: el.videoWidth, h: el.videoHeight };
-  });
-  check(!!v, "teaservideo staat in de 'Zin in Dich'-kaart");
-  check(!!v && v.loop && v.hasPoster, "teaservideo speelt in een lus en heeft een poster", JSON.stringify(v));
-  check(!!v && v.w > 0 && v.h > 0, "teaservideo laadt (heeft afmetingen)", JSON.stringify(v));
-  check(!!v && v.muted, "teaservideo valt terug op gedempt (browser staat autoplay met geluid niet toe zonder klik)", JSON.stringify(v));
-
-  const btnState = () => page.evaluate(() => {
-    const btn = document.querySelector(".mute-toggle");
-    return btn && { pressed: btn.getAttribute("aria-pressed"), label: btn.getAttribute("aria-label"), icon: btn.querySelector("use").getAttribute("href") };
-  });
-  check(JSON.stringify(await btnState()) === JSON.stringify({ pressed: "true", label: "Zet het geluid van de teaser aan", icon: "#i-mute" }), "geluidsknop toont 'gedempt' zolang de video gedempt is");
-  await page.click(".mute-toggle");
-  check((await page.evaluate(() => document.querySelector("video.cover").muted)) === false, "klik op de geluidsknop zet het geluid van de teaser aan");
-  check(JSON.stringify(await btnState()) === JSON.stringify({ pressed: "false", label: "Zet het geluid van de teaser uit", icon: "#i-vol" }), "geluidsknop toont 'geluid aan' na de klik");
-  await page.click(".mute-toggle");
-  check((await page.evaluate(() => document.querySelector("video.cover").muted)) === true, "nogmaals klikken dempt de teaser weer");
+  const src = await page.getAttribute(".single iframe.sp-embed", "src");
+  check(!!src && src.startsWith("https://open.spotify.com/embed/album/4fjELHN7C06K9lgxeiLwt1"), "Spotify-speler voor 'Zin in Dich' staat in de kaart", String(src));
+  check((await page.$("video.cover")) === null, "de teaservideo is vervangen");
   await ctx.close();
-
-  const reduced = await browser.newContext({ viewport: { width: 1440, height: 900 }, reducedMotion: "reduce" });
-  const rp = await reduced.newPage();
-  await rp.goto(BASE, { waitUntil: "load" });
-  await rp.waitForTimeout(300);
-  const rm = await rp.evaluate(() => { const el = document.querySelector("video.cover"); return el && { paused: el.paused, muted: el.muted }; });
-  check(!!rm && rm.paused === true && rm.muted === true, "teaservideo speelt niet automatisch af bij 'minder beweging' en blijft gedempt", JSON.stringify(rm));
-  await reduced.close();
 }
 
 // Bezoekersteller: paginabezoek en de afgesproken klikken komen als gebeurtenis bij GoatCounter aan

@@ -2,9 +2,10 @@ name: Tourdata synchroniseren vanuit Artwin
 
 on:
   schedule:
-    # Elke dag rond 07:00 in Nederland (05:00 UTC in de winter, 06:00 UTC in de zomer -
-    # cron kent geen tijdzones, dus dit schuift een uur mee met de zomertijd).
-    - cron: "0 5 * * *"
+    # Twee keer per dag, om 06:00 en 18:00 Nederlandse tijd. Dankzij de timezone-sleutel
+    # schuift dit vanzelf mee met de zomer- en wintertijd.
+    - cron: "0 6,18 * * *"
+      timezone: "Europe/Amsterdam"
   workflow_dispatch: {}
 
 permissions:

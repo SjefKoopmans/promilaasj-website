@@ -10,7 +10,6 @@
 // option = true      = optioneel   (nog geen bevestigd optreden; toont een "Optie"-label)
 // Besloten feesten staan met titel "Besloten feest" en zonder venue/city/url (privacy).
 window.GIGS = [
-	{ date: "2026-11-08", title: "Herenzitting", venue: "STROATJE", city: "Landgraaf" },
 	{ date: "2026-11-21", title: "Besloten feest" },
 	{ date: "2026-11-28", title: "11x 11 jubileum", venue: "SPORTHAL DE KOEWEIDE", city: "Montfort" },
 	{ date: "2027-01-09", title: "Prinsebal Wuilus", venue: "VILGAARD BMV DE", city: "Velden" },

@@ -28,6 +28,7 @@ window.GIGS = [
 	{ date: "2027-03-06", title: "Halfvasten", venue: "Café de Pruuver", city: "Afferden" },
 	{ date: "2027-07-18", title: "ZLF 2027", venue: "Feestweide ZLF 2027", city: "Oirsbeek" },
 	{ date: "2028-01-21", title: "Besloten feest" },
+	{ date: "2028-01-30", title: "prinse receptie", venue: "UNITAS", city: "Baarlo" },
 	{ date: "2028-02-26", title: "Besloten feest" },
 	{ date: "2028-02-26", title: "DON BOSCO", venue: "DON BOSCO", city: "Heel" },
 	{ date: "2028-02-27", title: "KLAPROOS", venue: "KLAPROOS", city: "Siebengewald" },
